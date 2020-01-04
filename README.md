@@ -1,2 +1,0 @@
-# EthanBlog
-My Blog
