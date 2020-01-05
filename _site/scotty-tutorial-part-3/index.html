@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Scotty Tutorial Part 3 - Ethan Gardners Software Blog</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Ethan Gardners Software Blog" property="og:site_name">
+  
+    <meta content="Scotty Tutorial Part 3" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="Adding Authentication and Authroizaton via JWT's to our application." property="og:description">
+  
+  
+    <meta content="https://www.codewandering.com/scotty-tutorial-part-3/" property="og:url">
+  
+  
+    <meta content="2020-01-04T00:00:00-05:00" property="article:published_time">
+    <meta content="https://www.codewandering.com/about/" property="article:author">
+  
+  
+    <meta content="https://www.codewandering.com/assets/img/Haskell.png" property="og:image">
+  
+  
+    
+  
+  
+    
+    <meta content="Scotty" property="article:tag">
+    
+    <meta content="Haskell" property="article:tag">
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@">
+  
+    <meta name="twitter:title" content="Scotty Tutorial Part 3">
+  
+  
+    <meta name="twitter:url" content="https://www.codewandering.com/scotty-tutorial-part-3/">
+  
+  
+    <meta name="twitter:description" content="Adding Authentication and Authroizaton via JWT's to our application.">
+  
+  
+    <meta name="twitter:image:src" content="https://www.codewandering.com/assets/img/Haskell.png">
+  
+
+	<meta name="description" content="Adding Authentication and Authroizaton via JWT's to our application.">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-touch-icon-144x144.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/ethan-hammock.jpg" alt="Ethan Gardner"></a>
+      </div>
+      <div class="author-name">Ethan Gardner</div>
+      <p>I am some sort of engineer.</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <li><a href="" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+        
+        
+          <li><a href="https://facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+        
+        
+          <li class="github"><a href="http://github.com/https://github.com/emg184" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/https://www.linkedin.com/in/ethan-gardner-06261988/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href=""><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
+        
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2020 &copy; Ethan Gardner</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src=/assets/img/Haskell.png alt="Scotty Tutorial Part 3">
+        
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">Scotty Tutorial Part 3</h1>
+        <div class="page-date"><span>2020, Jan 04&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- jose
+- cryptonite
+- HsOpenSSL
+- mtl
+- transformers
+- unordered-containers
+</code></pre></div></div>
+
+<p>If you havent already you should go through the first two parts of this tutorial if you want to go straight to this part you can find it here:</p>
+
+<p>In this part of the tutorial we will go through adding authentiation to our app. There are two approaches that we can go with here. We can use session based authentication or JWT based authentication. JWT authentication has become popular but most applications dont actually use it for it’s intended purpose. Most tutorials show JWT’s being used exactly like a session token. JWT’s should be used when you need to allow a user access to multiple services. Sessions are simpler than JWT’s and allow for quicker invalidation of user permissions. For our application it is probably better to use sessions at this point, but i think most people reading this would rather see JWT authentication so I will show that in this part of the tutorial. If i find the time I may also go over the session based approach.</p>
+
+<p><em>I’d like to preface this with the fact that I am not a web security expert by any means so if i say something wrong please point it out</em></p>
+
+<p>The <code class="highlighter-rouge">jose</code> library appears to be the most up to date library for our purpose. This is the approach you might take if you were planning on having an Auth server that would genreate all of the tokens and then have microservices that decode the token using a public key to verify that the token generated was from out authentication server. The public key will be available as part of a JWK and will be available via an endpoint on our server. The other potential servers in our app’s ecosystem can then access this endpoint to obtain the JWK’s for the decoding.</p>
+
+<p>What most would refer to as a JWT is not actually a JWT. They are referring to a JWS (JSON Web Signature) or a JWE (JSON Web Encryption). We will be using a JWS that is signed with an RSA Private Key. Let’s first generate our keys using a common application <code class="highlighter-rouge">ssh-keygen</code> and <code class="highlighter-rouge">openssl</code>.</p>
+
+<p><em>I am developing on a linux machine but Windows users should be able to use ssh-keygen if they have git installed as for OpenSSL i am not sure what the windows alternative would be.</em></p>
+
+<p>Let’s make a config directory in the root of our folder and run the following command:</p>
+
+<p><em>There’s no need to password protect these keys</em></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-t</span> rsa <span class="nt">-b</span> 4096 <span class="nt">-m</span> PEM <span class="nt">-f</span> key
+<span class="nv">$ </span>openssl rsa <span class="nt">-in</span> ./key <span class="nt">-pubout</span> <span class="nt">-outform</span> PEM <span class="nt">-out</span> key.pub
+</code></pre></div></div>
+
+<p>This generates a 4096 bit RSA key pair. This gives us a folder structure like so</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">.</span>
+├── key
+└── key.pub
+</code></pre></div></div>
+
+<p>Ok great now we have the starting material to create our public and private JWK’s I wasn’t able to find a way to directly make the RSA Key’s into JWK’s with the <code class="highlighter-rouge">jose</code> library although I am sure this can be done <em>(the jose library seems very comprehensive and the documentation seems great, but with it’s heavy usage of <code class="highlighter-rouge">lens</code> it can definetely be hard for someone to navigate around. Another library you could use that seems to be more beginner friendly is <code class="highlighter-rouge">jose-jwt</code> but it hadn’t been updated in almost two years at the time of this writing and it depends on the <code class="highlighter-rouge">jose</code> library which is frequently updated.)</em> The main functions that we want to implement are shown as examples in the <code class="highlighter-rouge">jose</code> documentation and those functions are:</p>
+
+<p>http://hackage.haskell.org/package/jose-0.8.2.0/docs/Crypto-JWT.html</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">doJwtSign</span> <span class="o">::</span> <span class="kt">JWK</span> <span class="o">-&gt;</span> <span class="kt">ClaimsSet</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">JWTError</span> <span class="kt">SignedJWT</span><span class="p">)</span>
+<span class="n">doJwtSign</span> <span class="n">jwk</span> <span class="n">claims</span> <span class="o">=</span> <span class="n">runExceptT</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="n">alg</span> <span class="o">&lt;-</span> <span class="n">bestJWSAlg</span> <span class="n">jwk</span>
+  <span class="n">signClaims</span> <span class="n">jwk</span> <span class="p">(</span><span class="n">newJWSHeader</span> <span class="p">(</span><span class="nb">()</span><span class="p">,</span> <span class="n">alg</span><span class="p">))</span> <span class="n">claims</span>
+
+<span class="n">doJwtVerify</span> <span class="o">::</span> <span class="kt">JWK</span> <span class="o">-&gt;</span> <span class="kt">SignedJWT</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">JWTError</span> <span class="kt">ClaimsSet</span><span class="p">)</span>
+<span class="n">doJwtVerify</span> <span class="n">jwk</span> <span class="n">jwt</span> <span class="o">=</span> <span class="n">runExceptT</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="kr">let</span> <span class="n">config</span> <span class="o">=</span> <span class="n">defaultJWTValidationSettings</span> <span class="p">(</span><span class="o">==</span> <span class="s">"bob"</span><span class="p">)</span>
+  <span class="n">verifyClaims</span> <span class="n">config</span> <span class="n">jwk</span> <span class="n">jwt</span>
+</code></pre></div></div>
+
+<p>Ok so let’s start by making our JWK’s becuase that is what we will need to encrypt our tokens. Let’s make a folder in our Adapters folder called Auth. We will call this an Adapter since it is working with outside files. Our end file will look like this. Dont worry we’ll walk through each step.</p>
+
+<p><em>src/Adapter/Auth/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Adapter.Auth.Main</span> <span class="p">(</span><span class="nf">mkAuthEnv</span><span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE.JWK</span>
+<span class="kr">import</span>           <span class="nn">Crypto.PubKey.RSA.Types</span> <span class="k">as</span> <span class="n">RSAT</span>
+<span class="kr">import</span>           <span class="nn">OpenSSL.PEM</span>
+<span class="kr">import</span>           <span class="nn">OpenSSL.EVP.PKey</span> <span class="k">as</span> <span class="n">EVP</span>
+<span class="kr">import</span>           <span class="nn">OpenSSL.RSA</span> <span class="k">as</span> <span class="n">ORSA</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AuthEnv</span> 
+
+<span class="n">mkAuthEnv</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">AuthEnv</span> 
+<span class="n">mkAuthEnv</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">privKey</span> <span class="o">&lt;-</span> <span class="n">makePrivateKey</span>
+  <span class="kr">let</span> <span class="n">pubKey</span> <span class="o">=</span> <span class="kt">RSAT</span><span class="o">.</span><span class="n">toPublicKey</span> <span class="p">(</span><span class="kt">KeyPair</span> <span class="n">privKey</span><span class="p">)</span>
+  <span class="kr">let</span> <span class="n">pubJWK</span> <span class="o">=</span> <span class="n">fromKeyMaterial</span> <span class="p">(</span><span class="kt">RSAKeyMaterial</span> <span class="p">(</span><span class="n">toRSAPublicKeyParameters</span> <span class="n">pubKey</span><span class="p">))</span>
+  <span class="kr">let</span> <span class="n">privJWK</span> <span class="o">=</span> <span class="n">fromRSA</span> <span class="n">privKey</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="kt">AuthEnv</span> <span class="n">privJWK</span> <span class="n">pubJWK</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="n">makePrivateKey</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PrivateKey</span>
+<span class="n">makePrivateKey</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">privKey</span> <span class="o">&lt;-</span> <span class="n">readFile</span> <span class="s">"./config/key"</span>
+  <span class="n">priK</span> <span class="o">&lt;-</span> <span class="n">readPrivateKey</span> <span class="n">privKey</span> <span class="kt">PwNone</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">SomeKeyPair</span>
+  <span class="kr">let</span> <span class="n">k</span> <span class="o">=</span> <span class="n">toKeyPair</span> <span class="o">$</span> <span class="n">priK</span> <span class="o">::</span> <span class="kt">Maybe</span> <span class="p">(</span><span class="kt">RSAKeyPair</span><span class="p">)</span>
+  <span class="kr">let</span> <span class="n">kp</span> <span class="o">=</span> <span class="n">convertRSA</span> <span class="n">k</span>
+  <span class="kr">case</span> <span class="n">kp</span> <span class="kr">of</span>
+   <span class="kt">Just</span> <span class="n">pka</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+   	<span class="n">return</span> <span class="n">pka</span>
+   <span class="kt">Nothing</span> <span class="o">-&gt;</span> <span class="n">error</span> <span class="s">"No Private Key Could Be Made"</span>
+
+<span class="n">convertRSA</span> <span class="o">::</span> <span class="kt">Maybe</span> <span class="kt">RSAKeyPair</span> <span class="o">-&gt;</span> <span class="kt">Maybe</span> <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PrivateKey</span>
+<span class="n">convertRSA</span> <span class="kt">Nothing</span> <span class="o">=</span> <span class="n">error</span> <span class="s">"No RSA Key Pair Supplied"</span>
+<span class="n">convertRSA</span> <span class="p">(</span><span class="kt">Just</span> <span class="n">pk</span><span class="p">)</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kr">let</span> <span class="n">rsad</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaD</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsap</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaP</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsaq</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaQ</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsadmp1</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaDMP1</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsadmq1</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaDMQ1</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsaiqmp1</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaIQMP</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">pubkey</span> <span class="o">=</span> <span class="n">makePubKey</span> <span class="n">pk</span>
+  <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PrivateKey</span> <span class="o">&lt;$&gt;</span> <span class="kt">Just</span> <span class="n">pubkey</span> <span class="o">&lt;*&gt;</span> <span class="kt">Just</span> <span class="n">rsad</span> <span class="o">&lt;*&gt;</span> <span class="kt">Just</span> <span class="n">rsap</span> <span class="o">&lt;*&gt;</span> <span class="kt">Just</span> <span class="n">rsaq</span> <span class="o">&lt;*&gt;</span> <span class="n">rsadmp1</span> <span class="o">&lt;*&gt;</span> <span class="n">rsadmq1</span> <span class="o">&lt;*&gt;</span> <span class="n">rsaiqmp1</span>
+
+<span class="n">makePubKey</span> <span class="o">::</span> <span class="kt">RSAKeyPair</span> <span class="o">-&gt;</span> <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PublicKey</span>
+<span class="n">makePubKey</span> <span class="n">pubk</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kr">let</span> <span class="n">rsa_size</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaSize</span> <span class="n">pubk</span>
+  <span class="kr">let</span> <span class="n">rsa_n</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaN</span> <span class="n">pubk</span>
+  <span class="kr">let</span> <span class="n">rsa_e</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaE</span> <span class="n">pubk</span>
+  <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PublicKey</span> <span class="n">rsa_size</span> <span class="n">rsa_n</span> <span class="n">rsa_e</span>
+</code></pre></div></div>
+
+<p>The only other file we need to make is the file that contains our <code class="highlighter-rouge">AuthEnv</code> datatype. And that file will look like this:</p>
+
+<p><em>src/Domain/Types/AuthEnv.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.AuthEnv</span> <span class="p">(</span><span class="kt">AuthEnv</span><span class="p">(</span><span class="o">..</span><span class="p">))</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE.JWK</span>
+
+<span class="kr">data</span> <span class="kt">AuthEnv</span> <span class="o">=</span> <span class="kt">AuthEnv</span> 
+  <span class="p">{</span> <span class="n">privateJWK</span> <span class="o">::</span> <span class="kt">JWK</span>
+  <span class="p">,</span> <span class="n">publicJWK</span> <span class="o">::</span> <span class="kt">JWK</span>
+  <span class="p">,</span> <span class="n">expirationTimeDifference</span> <span class="o">::</span> <span class="kt">Int</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>There’s not much going on with this datatype it’s pretty self explanitory. This datatype will be passed to all our functions that require being signed and verified.</p>
+
+<p>Ok so back to our functions in our Auth Adapter. We can find the conversion functions in <code class="highlighter-rouge">Crypto.JOSE.JWK</code> that we want to utilize:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fromKeyMaterial</span> <span class="o">::</span> <span class="kt">KeyMaterial</span> <span class="o">-&gt;</span> <span class="kt">JWK</span>
+
+<span class="n">fromRSA</span> <span class="o">::</span> <span class="kt">PrivateKey</span> <span class="o">-&gt;</span> <span class="kt">JWK</span>
+</code></pre></div></div>
+<p>http://hackage.haskell.org/package/jose-0.8.2.0/docs/Crypto-JOSE-JWK.html#g:4</p>
+
+<p>So what we need to do it marshall the strings in our files into <code class="highlighter-rouge">KeyMaterial</code> and <code class="highlighter-rouge">PrivateKey</code> those two come from another library called <code class="highlighter-rouge">cryptonite</code> but in order to get made into the <code class="highlighter-rouge">PrivateKey</code> we need to use <code class="highlighter-rouge">HsOpenSSL</code> (again probably another way):</p>
+
+<p>I don’t mind throwing an error here since this should take place prior to the app starting and if there are any issues with generating the key i would want the app to shutdown.</p>
+
+<p><em>src/Adapter/Auth/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">makePrivateKey</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PrivateKey</span>
+<span class="n">makePrivateKey</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">privKey</span> <span class="o">&lt;-</span> <span class="n">readFile</span> <span class="s">"./config/key"</span>
+  <span class="n">priK</span> <span class="o">&lt;-</span> <span class="n">readPrivateKey</span> <span class="n">privKey</span> <span class="kt">PwNone</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">SomeKeyPair</span>
+  <span class="kr">let</span> <span class="n">k</span> <span class="o">=</span> <span class="n">toKeyPair</span> <span class="o">$</span> <span class="n">priK</span> <span class="o">::</span> <span class="kt">Maybe</span> <span class="p">(</span><span class="kt">RSAKeyPair</span><span class="p">)</span>
+  <span class="kr">let</span> <span class="n">kp</span> <span class="o">=</span> <span class="n">convertRSA</span> <span class="n">k</span>
+  <span class="kr">case</span> <span class="n">kp</span> <span class="kr">of</span>
+   <span class="kt">Just</span> <span class="n">pka</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+   	<span class="n">return</span> <span class="n">pka</span>
+   <span class="kt">Nothing</span> <span class="o">-&gt;</span> <span class="n">error</span> <span class="s">"No Private Key Could Be Made"</span>
+</code></pre></div></div>
+
+<p>we use the <code class="highlighter-rouge">readPrivateKey</code> function from <code class="highlighter-rouge">OpenSSL.PEM</code> (our key is currently stored in PEM format). If you didnt supply a password use <code class="highlighter-rouge">PwNone</code>.</p>
+
+<p>Now we have <code class="highlighter-rouge">SomeKeyPair</code> from <code class="highlighter-rouge">readPrivateKey :: String -&gt; PemPasswordSupply -&gt; IO SomeKeyPair</code> with this we can use <code class="highlighter-rouge">toKeyPair :: SomeKeyPair -&gt; Maybe RSAKeyPair</code> to get our RSAKeyPair and then we use our functions that we created:</p>
+
+<p><em>src/Adapter/Auth/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">convertRSA</span> <span class="o">::</span> <span class="kt">Maybe</span> <span class="kt">RSAKeyPair</span> <span class="o">-&gt;</span> <span class="kt">Maybe</span> <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PrivateKey</span>
+<span class="n">convertRSA</span> <span class="kt">Nothing</span> <span class="o">=</span> <span class="n">error</span> <span class="s">"No RSA Key Pair Supplied"</span>
+<span class="n">convertRSA</span> <span class="p">(</span><span class="kt">Just</span> <span class="n">pk</span><span class="p">)</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kr">let</span> <span class="n">rsad</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaD</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsap</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaP</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsaq</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaQ</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsadmp1</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaDMP1</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsadmq1</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaDMQ1</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">rsaiqmp1</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaIQMP</span> <span class="n">pk</span>
+  <span class="kr">let</span> <span class="n">pubkey</span> <span class="o">=</span> <span class="n">makePubKey</span> <span class="n">pk</span>
+  <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PrivateKey</span> <span class="o">&lt;$&gt;</span> <span class="kt">Just</span> <span class="n">pubkey</span> <span class="o">&lt;*&gt;</span> <span class="kt">Just</span> <span class="n">rsad</span> <span class="o">&lt;*&gt;</span> <span class="kt">Just</span> <span class="n">rsap</span> <span class="o">&lt;*&gt;</span> <span class="kt">Just</span> <span class="n">rsaq</span> <span class="o">&lt;*&gt;</span> <span class="n">rsadmp1</span> <span class="o">&lt;*&gt;</span> <span class="n">rsadmq1</span> <span class="o">&lt;*&gt;</span> <span class="n">rsaiqmp1</span>
+
+<span class="n">makePubKey</span> <span class="o">::</span> <span class="kt">RSAKeyPair</span> <span class="o">-&gt;</span> <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PublicKey</span>
+<span class="n">makePubKey</span> <span class="n">pubk</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kr">let</span> <span class="n">rsa_size</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaSize</span> <span class="n">pubk</span>
+  <span class="kr">let</span> <span class="n">rsa_n</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaN</span> <span class="n">pubk</span>
+  <span class="kr">let</span> <span class="n">rsa_e</span> <span class="o">=</span> <span class="kt">ORSA</span><span class="o">.</span><span class="n">rsaE</span> <span class="n">pubk</span>
+  <span class="kt">RSAT</span><span class="o">.</span><span class="kt">PublicKey</span> <span class="n">rsa_size</span> <span class="n">rsa_n</span> <span class="n">rsa_e</span>
+</code></pre></div></div>
+
+<p>This takes us from the datatype in the <code class="highlighter-rouge">HsOpenSSL</code> to the <code class="highlighter-rouge">cryptonite</code> library which is ultimately what the <code class="highlighter-rouge">jose</code> library uses.</p>
+
+<p>Once we have our <code class="highlighter-rouge">PrivateKey</code> we can easily get our <code class="highlighter-rouge">PublicKey</code> using the <code class="highlighter-rouge">toPublicKey :: KeyPair -&gt; PublicKey</code> which we can supply with a <code class="highlighter-rouge">KeyPair</code> since the type has the following signature <code class="highlighter-rouge">KeyPair PrivateKey</code>. And then we have eveything we need for our original target functions to create a <code class="highlighter-rouge">JWK</code>:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fromKeyMaterial</span> <span class="o">::</span> <span class="kt">KeyMaterial</span> <span class="o">-&gt;</span> <span class="kt">JWK</span>
+
+<span class="n">fromRSA</span> <span class="o">::</span> <span class="kt">PrivateKey</span> <span class="o">-&gt;</span> <span class="kt">JWK</span>
+</code></pre></div></div>
+
+<p>Perfect now we have the key’s needed to properly secure our tokens and we will supply our tokens inside of our <code class="highlighter-rouge">AuthEnv</code> datatype.</p>
+
+<p>Now we need to create our functions that will utilize these key’s in order to actually use our datatype.</p>
+
+<p>Here we can see why it is often a good idea to supply a more abstract datatype to our Application environment than an explicit type. As of right now we supply our application with <code class="highlighter-rouge">Pool Connection</code> this is a very context specific type. Instead lets create a type that we will have the ability to supply our application with the proper information (To more advanced haskellers this obviously would be a good time to include a reader datatype but we will do that in a later part of the tutorial as the only advantage it gives us now is to get rid of explicit parameter passing.).</p>
+
+<p>Lets create our type:</p>
+
+<p><em>src/Domain/Types/AppEnv.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.AppEnv</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Pool</span> 
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AuthEnv</span>
+
+<span class="kr">data</span> <span class="kt">AppEnv</span> <span class="o">=</span> <span class="kt">AppEnv</span>
+  <span class="p">{</span> <span class="n">pgEnv</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+  <span class="p">,</span> <span class="n">authEnv</span> <span class="o">::</span> <span class="kt">AuthEnv</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>I’ve seen this type be called a lot of different things Config, Env, Context, etc. This is generally just personal preference it accomplishes the same goal and allows us to easily add new fields to the datatype as our App changes.</p>
+
+<p>now let’s go back to our <code class="highlighter-rouge">Lib.hs</code> file and add our new datatype.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">LoadEnv</span> <span class="k">as</span> <span class="n">LE</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Adapter.Scotty.Main</span> <span class="k">as</span> <span class="n">Server</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Adapter.Auth.Main</span> <span class="k">as</span> <span class="n">AuthAdapter</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Adapter.PG.Main</span> <span class="k">as</span> <span class="n">DB</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AppEnv</span>
+
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kt">LE</span><span class="o">.</span><span class="n">loadEnvFrom</span> <span class="s">"./.env"</span>
+  <span class="n">authEnv</span> <span class="o">&lt;-</span> <span class="kt">AuthAdapter</span><span class="o">.</span><span class="n">mkAuthEnv</span>
+  <span class="n">pool</span> <span class="o">&lt;-</span> <span class="kt">DB</span><span class="o">.</span><span class="n">initDB</span>
+  <span class="kt">Server</span><span class="o">.</span><span class="n">main</span> <span class="p">(</span><span class="kt">AppEnv</span> <span class="n">pool</span> <span class="n">authEnv</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>And since we changed our datatype now we need to change our <code class="highlighter-rouge">Server.main</code> function to reflect this. So let’s go to our file and make those changes.</p>
+
+<p><em>src/Adapter/Scotty/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Adapter.Scotty.Main</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Domain.User.Service</span> <span class="k">as</span> <span class="n">UserService</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AppEnv</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">AppEnv</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="n">env</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">server</span> <span class="n">env</span>
+
+<span class="n">server</span> <span class="o">::</span> <span class="kt">AppEnv</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">server</span> <span class="n">env</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kt">UserService</span><span class="o">.</span><span class="n">signupUser</span> <span class="n">env</span>
+   <span class="n">get</span> <span class="s">"/user/:user_id"</span> <span class="o">$</span> <span class="kt">UserService</span><span class="o">.</span><span class="n">getUser</span> <span class="n">env</span>
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>That was simple enough if you’re following along with the <code class="highlighter-rouge">stack build --file-watch --fast</code> command you should see <code class="highlighter-rouge">GHC</code> guiding us through the process of refactoring which is really an amazing developer experience.</p>
+
+<p>lets refactor our service handlers now so that they can take our <code class="highlighter-rouge">AppEnv</code> datatype</p>
+
+<p><em>src/Domain/User/Service.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.User.Service</span> 
+ <span class="p">(</span> <span class="nf">signupUser</span>
+ <span class="p">,</span> <span class="nf">getUser</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Domain.User.PG</span> <span class="k">as</span> <span class="n">PG</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.UserSignup</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.User</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.CommonJSON</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AppEnv</span>
+
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Network.HTTP.Types.Status</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+
+<span class="n">signupUser</span> <span class="o">::</span> <span class="kt">AppEnv</span> <span class="o">-&gt;</span> <span class="kt">ActionM</span> <span class="nb">()</span>
+<span class="n">signupUser</span> <span class="n">env</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+  <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+  <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">status</span> <span class="n">status400</span>
+    <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">usr</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="kt">PG</span><span class="o">.</span><span class="n">addUserToDB</span> <span class="p">(</span><span class="n">pgEnv</span> <span class="n">env</span><span class="p">)</span> <span class="n">s</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">usr</span><span class="p">)</span> <span class="kr">of</span> 
+     <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+      <span class="n">status</span> <span class="n">status400</span>
+      <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+     <span class="kt">Right</span> <span class="n">u</span> <span class="o">-&gt;</span> <span class="n">json</span> <span class="o">$</span> <span class="kt">SuccessfulSignup</span> <span class="n">u</span>
+
+<span class="n">getUser</span> <span class="o">::</span> <span class="kt">AppEnv</span> <span class="o">-&gt;</span> <span class="kt">ActionM</span> <span class="nb">()</span>
+<span class="n">getUser</span> <span class="n">env</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">uId</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="kt">Just</span> <span class="o">&lt;$&gt;</span> <span class="p">(</span><span class="n">param</span> <span class="s">"user_id"</span><span class="o">::</span> <span class="kt">ActionM</span> <span class="kt">Integer</span><span class="p">))</span> <span class="p">`</span><span class="n">rescue</span><span class="p">`</span> <span class="p">(</span><span class="nf">\</span><span class="n">msg</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Nothing</span><span class="p">)</span>
+  <span class="kr">case</span> <span class="n">uId</span> <span class="kr">of</span>
+    <span class="kt">Nothing</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+     <span class="n">status</span> <span class="n">status400</span>
+     <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="s">"No Integer supplied in user_id paramter of url"</span>
+    <span class="kt">Just</span> <span class="n">i</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+     <span class="n">usr</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="kt">PG</span><span class="o">.</span><span class="n">getUserByID</span> <span class="p">(</span><span class="n">pgEnv</span> <span class="n">env</span><span class="p">)</span> <span class="n">i</span> 
+     <span class="kr">case</span> <span class="n">usr</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+       <span class="n">status</span> <span class="n">status400</span>
+       <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+       <span class="n">json</span> <span class="o">$</span> <span class="kt">UserWrapper</span> <span class="n">s</span>
+</code></pre></div></div>
+
+<p>And now that we can give our routes access to our AuthEnv let’s make a login route that issues a token for our users. Let’s first start by figuring out what claims we want to put into our ClaimSet. Lets put the user’s id <code class="highlighter-rouge">user_id</code> in there. Looking at the RFC spec for the JWT this goes under the field <code class="highlighter-rouge">sub</code> and we’ll put the users email in as well.</p>
+
+<p>the other reserved fields in the RFC Spec are:</p>
+
+<ul>
+  <li>iss: The issuer of the token.</li>
+  <li>sub: The subject of the JWT.</li>
+  <li>aud: Who the JWT is intended for.</li>
+  <li>exp: When the JWT expires.</li>
+  <li>nbf: The time at which the token should not be evaluated before.</li>
+  <li>iat: When the JWT was issued.</li>
+  <li>jti: The unique identifier for the token this can be used for blacklisting.</li>
+</ul>
+
+<p>None of these fields are required by the specification. Currently we will use the following:</p>
+
+<ul>
+  <li>iss</li>
+  <li>sub</li>
+  <li>aud</li>
+  <li>exp</li>
+  <li>nbf</li>
+  <li>iat</li>
+</ul>
+
+<p>We don’t really have a need for the jti command as of right now but maybe we will later at which time we will add it.</p>
+
+<p>We will also add in an email field as a public claim. Great so let’s create a datatype that has these claims and let’s call it <code class="highlighter-rouge">AuthUser</code></p>
+
+<p><em>src/Domain/Types/AuthUser.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.AuthUser</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Int</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.FromRow</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+
+<span class="kr">data</span> <span class="kt">AuthUser</span> <span class="o">=</span> <span class="kt">AuthUser</span>
+  <span class="p">{</span> <span class="n">auth_user_id</span> <span class="o">::</span> <span class="kt">Int64</span>
+  <span class="p">,</span> <span class="n">auth_user_email</span> <span class="o">::</span> <span class="kt">T</span><span class="o">.</span><span class="kt">Text</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">instance</span> <span class="kt">FromRow</span> <span class="kt">AuthUser</span> <span class="kr">where</span>
+  <span class="n">fromRow</span> <span class="o">=</span> <span class="kt">AuthUser</span> <span class="o">&lt;$&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span>
+</code></pre></div></div>
+
+<p>Ok that’s a good enough container for now. Let’s now create our function for issuing our token. Authentication will be a core part of our application so we will throw that in the Domain folder.</p>
+
+<p><em>src/Domain/Auth/Auth.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Auth.Auth</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE</span>
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE.Error</span> <span class="k">as</span> <span class="n">E</span>
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE.JWK</span>
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE.JWS</span> <span class="k">as</span> <span class="n">CJWS</span>
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE.Header</span>
+<span class="kr">import</span>           <span class="nn">Crypto.JOSE.Compact</span>
+<span class="kr">import</span>           <span class="nn">Control.Monad.Except</span>
+<span class="kr">import</span>           <span class="nn">Crypto.JWT</span>
+<span class="kr">import</span>           <span class="nn">Data.Time.Clock</span>
+<span class="kr">import</span>           <span class="nn">Data.Time.Clock.POSIX</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy.Encoding</span> <span class="k">as</span> <span class="n">TLE</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AuthEnv</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.ByteString.Lazy</span> <span class="k">as</span> <span class="n">L</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.HashMap.Strict</span> <span class="k">as</span> <span class="n">HM</span>
+<span class="kr">import</span>           <span class="nn">Data.Maybe</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AuthUser</span>
+
+<span class="n">mkStandardClaims</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">HM</span><span class="o">.</span><span class="kt">HashMap</span> <span class="kt">T</span><span class="o">.</span><span class="kt">Text</span> <span class="kt">Value</span><span class="p">)</span>
+<span class="n">mkStandardClaims</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">t</span> <span class="o">&lt;-</span> <span class="n">getCurrentTime</span> 
+  <span class="kr">let</span> <span class="n">rounded</span> <span class="o">=</span> <span class="n">fromIntegral</span> <span class="o">$</span> <span class="p">(</span><span class="n">floor</span> <span class="o">$</span> <span class="n">utcTimeToPOSIXSeconds</span> <span class="n">t</span><span class="p">)</span>
+  <span class="kr">let</span> <span class="n">standardClaims</span> <span class="o">=</span> <span class="p">[(</span><span class="s">"iss"</span><span class="p">,</span> <span class="kt">String</span> <span class="s">"http://www.ethan.com/"</span><span class="p">),</span> <span class="p">(</span><span class="s">"aud"</span><span class="p">,</span> <span class="kt">String</span> <span class="s">"http://www.ethan.com/"</span><span class="p">),</span> <span class="p">(</span><span class="s">"iat"</span><span class="p">,</span> <span class="kt">Number</span> <span class="n">rounded</span><span class="p">),</span> <span class="p">(</span><span class="s">"exp"</span><span class="p">,</span> <span class="kt">Number</span> <span class="o">$</span> <span class="p">(</span><span class="n">rounded</span> <span class="o">+</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)))]</span> 
+  <span class="n">return</span> <span class="o">$</span> <span class="kt">HM</span><span class="o">.</span><span class="n">fromList</span> <span class="n">standardClaims</span>
+
+<span class="n">issueToken</span> <span class="o">::</span> <span class="kt">AuthEnv</span> <span class="o">-&gt;</span> <span class="kt">AuthUser</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">String</span> <span class="kt">L</span><span class="o">.</span><span class="kt">ByteString</span><span class="p">)</span>
+<span class="n">issueToken</span> <span class="n">env</span> <span class="n">authUser</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">standardClaims</span> <span class="o">&lt;-</span> <span class="n">mkStandardClaims</span>
+  <span class="c1">-- let claimsWithEmail = HM.insert "email" (String $ userEmail $ auth_user_email authUser) standardClaims</span>
+  <span class="kr">let</span> <span class="n">claimsWithEmail</span> <span class="o">=</span> <span class="kt">HM</span><span class="o">.</span><span class="n">insert</span> <span class="s">"email"</span> <span class="p">(</span><span class="kt">String</span> <span class="o">$</span> <span class="n">auth_user_email</span> <span class="n">authUser</span><span class="p">)</span> <span class="n">standardClaims</span>
+  <span class="c1">-- let claimsWithSub = HM.insert "sub" (Number $ fromIntegral $ userID $ auth_user_id authUser) claimsWithEmail</span>
+  <span class="kr">let</span> <span class="n">claimsWithSub</span> <span class="o">=</span> <span class="kt">HM</span><span class="o">.</span><span class="n">insert</span> <span class="s">"sub"</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">$</span> <span class="n">fromIntegral</span> <span class="o">$</span> <span class="n">auth_user_id</span> <span class="n">authUser</span><span class="p">)</span> <span class="n">claimsWithEmail</span>
+  <span class="c1">-- let sc = fromMaybe emptyClaimsSet (decode $ encode claimsWithSub) </span>
+  <span class="kr">let</span> <span class="n">sc</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="o">$</span> <span class="n">encode</span> <span class="n">claimsWithSub</span><span class="p">)</span> <span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">ClaimsSet</span>
+  <span class="kr">case</span> <span class="n">sc</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="n">e</span>  
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">signedJWT</span> <span class="o">&lt;-</span> <span class="n">doJwtSign</span> <span class="p">(</span><span class="n">privateJWK</span> <span class="n">env</span><span class="p">)</span> <span class="n">s</span>
+    <span class="kr">case</span> <span class="n">signedJWT</span> <span class="kr">of</span>
+     <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+      <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="s">"Unable to sign JWT"</span>
+     <span class="kt">Right</span> <span class="n">js</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+      <span class="n">return</span> <span class="o">$</span> <span class="kt">Right</span> <span class="p">(</span><span class="n">encodeCompact</span> <span class="n">js</span><span class="p">)</span>
+
+<span class="n">doJwtSign</span> <span class="o">::</span> <span class="kt">JWK</span> <span class="o">-&gt;</span> <span class="kt">ClaimsSet</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">JWTError</span> <span class="kt">SignedJWT</span><span class="p">)</span>
+<span class="n">doJwtSign</span> <span class="n">jwk</span> <span class="n">claims</span> <span class="o">=</span> <span class="n">runExceptT</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="n">alg</span> <span class="o">&lt;-</span> <span class="n">bestJWSAlg</span> <span class="n">jwk</span>
+  <span class="n">signClaims</span> <span class="n">jwk</span> <span class="p">(</span><span class="n">newJWSHeader</span> <span class="p">(</span><span class="nb">()</span><span class="p">,</span> <span class="n">alg</span><span class="p">))</span> <span class="n">claims</span>
+</code></pre></div></div>
+<p>Ok so you might be looking at this and think wow that doesn’t seem to make much sense why would we <code class="highlighter-rouge">decode</code> something immediately after we <code class="highlighter-rouge">encode</code> it. The reason we are doing this is because we are trying to avoid using the <code class="highlighter-rouge">lens</code> library for right now. The <code class="highlighter-rouge">jose</code> library provides a very good api for ensuring correct JWT claimssets are made and we could use it without utilizing <code class="highlighter-rouge">lens</code> with the function <code class="highlighter-rouge">addClaim :: Text -&gt; Value -&gt; ClaimsSet -&gt; ClaimsSet</code> but for now let’s just stick with this.</p>
+
+<p>You might have also noticed the <code class="highlighter-rouge">runExceptT</code> this uses the <code class="highlighter-rouge">ExceptT</code> monad transformer. We could rewrite this function to not use this but this is the example provided in the docs so let’s just go with it. The specific details of how this works are largely unimportant right now.</p>
+
+<p>And lastly you might have noticed we use the <code class="highlighter-rouge">encodeCompact</code> function. We use this to put our JWS into the compact serialization form that is often used for passing around JWT’s</p>
+
+<p>Now let’s create our route that will utilize this function.</p>
+
+<p><em>src/Domain/User/Service.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.User.Service</span> 
+ <span class="p">(</span> <span class="nf">signupUser</span>
+ <span class="p">,</span> <span class="nf">getUser</span>
+ <span class="p">,</span> <span class="nf">loginUser</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Domain.User.PG</span> <span class="k">as</span> <span class="n">PG</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.UserSignup</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.User</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.CommonJSON</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.UserSignin</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AppEnv</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.IssueToken</span>
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Network.HTTP.Types.Status</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy.Encoding</span> <span class="k">as</span> <span class="n">TLE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Domain.Auth.Auth</span> <span class="k">as</span> <span class="n">Auth</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.ByteString.Lazy</span> <span class="k">as</span> <span class="n">L</span>
+
+<span class="o">...</span>
+
+<span class="n">loginUser</span> <span class="o">::</span> <span class="kt">AppEnv</span> <span class="o">-&gt;</span> <span class="kt">ActionM</span> <span class="nb">()</span>
+<span class="n">loginUser</span> <span class="n">env</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+  <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignin</span>
+  <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">status</span> <span class="n">status400</span>
+    <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">usr</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="kt">PG</span><span class="o">.</span><span class="n">userLogin</span> <span class="p">(</span><span class="n">pgEnv</span> <span class="n">env</span><span class="p">)</span> <span class="n">s</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">usr</span><span class="p">)</span> <span class="kr">of</span> 
+     <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+      <span class="n">status</span> <span class="n">status400</span>
+      <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+     <span class="kt">Right</span> <span class="n">u</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+      <span class="n">tok</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="kt">Auth</span><span class="o">.</span><span class="n">issueToken</span> <span class="p">(</span><span class="n">authEnv</span> <span class="n">env</span><span class="p">)</span> <span class="n">u</span>
+      <span class="kr">case</span> <span class="n">tok</span> <span class="kr">of</span>
+        <span class="kt">Left</span> <span class="n">err</span> <span class="o">-&gt;</span> <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">err</span>
+        <span class="kt">Right</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">json</span> <span class="o">$</span> <span class="kt">IssueToken</span> <span class="n">t</span>
+</code></pre></div></div>
+
+<p>and let’s make the <code class="highlighter-rouge">UserSignin</code> datatype and the appropriate database function to return our AuthUser.</p>
+
+<p><em>src/Domain/Types/UserSignin.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.UserSignin</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span>
+
+<span class="kr">data</span> <span class="kt">UserSignin</span> <span class="o">=</span> <span class="kt">UserSignin</span>
+ <span class="p">{</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">T</span><span class="o">.</span><span class="kt">Text</span>
+ <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">T</span><span class="o">.</span><span class="kt">Text</span>
+ <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">UserSignin</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="kr">do</span>
+   <span class="n">e</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"email"</span>
+   <span class="n">p</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"password"</span>
+   <span class="n">return</span> <span class="o">$</span> <span class="kt">UserSignin</span> <span class="n">e</span> <span class="n">p</span>
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to be an object"</span>
+</code></pre></div></div>
+
+<p>Nothing new here.</p>
+
+<p><em>src/Domain/User/PG.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.User.PG</span> 
+ <span class="p">(</span> <span class="nf">addUserToDB</span>
+ <span class="p">,</span> <span class="nf">getUserByID</span>
+ <span class="p">,</span> <span class="nf">userLogin</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="o">...</span>
+
+<span class="kr">import</span>           <span class="nn">Domain.Types.UserSignin</span> <span class="k">as</span> <span class="n">US</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.AuthUser</span>
+
+<span class="o">...</span>
+
+<span class="n">userLogin</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UserSignin</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">String</span> <span class="kt">AuthUser</span><span class="p">)</span>
+<span class="n">userLogin</span> <span class="n">pool</span> <span class="n">usr</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">val</span> <span class="o">&lt;-</span> <span class="kt">PG</span><span class="o">.</span><span class="n">withPool</span> <span class="n">pool</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="n">query</span> <span class="n">c</span> <span class="n">statement</span> <span class="p">(</span><span class="kt">US</span><span class="o">.</span><span class="n">email</span> <span class="n">usr</span><span class="p">,</span> <span class="kt">US</span><span class="o">.</span><span class="n">password</span> <span class="n">usr</span><span class="p">))</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">SqlError</span> <span class="p">[</span><span class="kt">AuthUser</span><span class="p">])</span>
+  <span class="kr">case</span> <span class="n">val</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="s">"Unexpected Server Error. Please try again later."</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">print</span> <span class="o">$</span> <span class="n">s</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">length</span> <span class="n">s</span><span class="p">)</span> <span class="kr">of</span>
+     <span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Right</span> <span class="o">$</span> <span class="n">head</span> <span class="n">s</span> 
+     <span class="kr">_</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="s">"That user does not exist."</span>
+  <span class="kr">where</span> <span class="n">statement</span> <span class="o">=</span> <span class="s">"SELECT user_id, cast (email as text) FROM users WHERE email = ? AND password = crypt(?, password) LIMIT 1"</span>
+</code></pre></div></div>
+
+<p>And last but not least let’s make our type to return our token in.</p>
+
+<p><em>src/Domain/Types/IssueToken.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.IssueToken</span> <span class="p">(</span><span class="kt">IssueToken</span><span class="p">(</span><span class="o">..</span><span class="p">))</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.ByteString.Lazy</span> <span class="k">as</span> <span class="n">L</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy.Encoding</span> <span class="k">as</span> <span class="n">TLE</span>
+
+<span class="kr">newtype</span> <span class="kt">IssueToken</span> <span class="o">=</span> <span class="kt">IssueToken</span> <span class="p">{</span> <span class="n">token</span> <span class="o">::</span> <span class="kt">L</span><span class="o">.</span><span class="kt">ByteString</span> <span class="p">}</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">IssueToken</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">u</span> <span class="o">=</span> <span class="n">object</span> 
+   <span class="p">[</span> <span class="s">"token"</span> <span class="o">.=</span> <span class="p">(</span><span class="kt">TLE</span><span class="o">.</span><span class="n">decodeUtf8</span> <span class="p">(</span><span class="n">token</span> <span class="n">u</span><span class="p">))</span>
+   <span class="p">]</span>
+</code></pre></div></div>
+
+<p>and now let’s test out our application with some of the data that we already created i am going to send the following data:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner11@ethan.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Holamundo@1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>and in response i get:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJQUzUxMiJ9.e30.NqLk6dmuRPuXrLMj83ImiyvSTj2QxmGhBijyuG1xefZzzLp1WFWBhKQl8QOru7DaFdzKwRhC78mSqpuRETRCy3d9t0VZtSYrRH200UMh3YAkLFc3UQMMSINTvsOlksWYfcZgnep2IOqG2KWGh4aNyzu-FnrEBJpfdUQJMKQFDrOM-qOuLJO78S-pBg_BHVBILR0cbQdQA7fftXaXa8HwAnKbLPzgwhzfS1HjllBOD-0K_hbSUaAzfO4rfddV9Fa48Jm6dYChisQZ5d0I3UTKvI2BUomWUsFTBfbGquHGv49fDGiewuf8zmJzJWzRqQLOXLloNL66_3JVNWfV1x1MYBQvQ96e0UoG6sMeaFfX4MXQFHLLabj_VW5pb4Vd0xEHhD64IZjHFBa-bQvFiDvsOMBBVvSrE3fKvdu7JBgr4Re9LIhCGb07CJOXQeh58VAJKWtu7bhH7PIipHWBbeF78ehflCLa_TFx2kMayyP4B2oQR9mPIq2H1kxR7VicvC7a8duvUX3I3Be4AO0HX1fwF2cr3rQ5Pa98J_n3VRygLNoL1yrlmdLEKbt-H5F77DGwfxEEbKn-47nbHoX3T2JBV89TWrxfpOOIrREUSffWWMSYIlA5R5Nzh8az_GvFcl1-XjTsi5eCbcK-f3HANboGLqDPXln0RHayCX5fAfCxmvA"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Great looks like everything is working fine. Now let’s write the function that will verify the claims in our token and tell us if the user should be allowed to hit the rest endpoints that they are attempting to access.</p>
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=Scotty Tutorial Part 3&url=https://www.codewandering.com/scotty-tutorial-part-3/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=https://www.codewandering.com/scotty-tutorial-part-3/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=https://www.codewandering.com/scotty-tutorial-part-3/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+            <a href="/tags#Scotty" class="tag">&#35; Scotty</a>
+          
+            <a href="/tags#Haskell" class="tag">&#35; Haskell</a>
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+    <div id="disqus_thread" class="article-comments"></div>
+    <script>
+      (function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//ethanmgardner.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-155315616-1', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>

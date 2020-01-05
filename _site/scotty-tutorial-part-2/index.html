@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Scotty Tutorial Part 2 - Ethan Gardners Software Blog</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Ethan Gardners Software Blog" property="og:site_name">
+  
+    <meta content="Scotty Tutorial Part 2" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="Adding persistent state to our application with PostgreSQL." property="og:description">
+  
+  
+    <meta content="https://www.codewandering.com/scotty-tutorial-part-2/" property="og:url">
+  
+  
+    <meta content="2020-01-03T00:00:00-05:00" property="article:published_time">
+    <meta content="https://www.codewandering.com/about/" property="article:author">
+  
+  
+    <meta content="https://www.codewandering.com/assets/img/Haskell.png" property="og:image">
+  
+  
+    
+  
+  
+    
+    <meta content="Scotty" property="article:tag">
+    
+    <meta content="Haskell" property="article:tag">
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@">
+  
+    <meta name="twitter:title" content="Scotty Tutorial Part 2">
+  
+  
+    <meta name="twitter:url" content="https://www.codewandering.com/scotty-tutorial-part-2/">
+  
+  
+    <meta name="twitter:description" content="Adding persistent state to our application with PostgreSQL.">
+  
+  
+    <meta name="twitter:image:src" content="https://www.codewandering.com/assets/img/Haskell.png">
+  
+
+	<meta name="description" content="Adding persistent state to our application with PostgreSQL.">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-touch-icon-144x144.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/ethan-hammock.jpg" alt="Ethan Gardner"></a>
+      </div>
+      <div class="author-name">Ethan Gardner</div>
+      <p>I am some sort of engineer.</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <li><a href="" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+        
+        
+          <li><a href="https://facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+        
+        
+          <li class="github"><a href="http://github.com/https://github.com/emg184" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/https://www.linkedin.com/in/ethan-gardner-06261988/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href=""><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
+        
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2020 &copy; Ethan Gardner</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src=/assets/img/Haskell.png alt="Scotty Tutorial Part 2">
+        
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">Scotty Tutorial Part 2</h1>
+        <div class="page-date"><span>2020, Jan 03&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      <p>Your <em>package.yaml</em> file should now have the following dependencies:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">dependencies</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">base &gt;= 4.7 &amp;&amp; &lt; </span><span class="m">5</span>
+<span class="pi">-</span> <span class="s">scotty</span>
+<span class="pi">-</span> <span class="s">text</span>
+<span class="pi">-</span> <span class="s">aeson</span>
+<span class="pi">-</span> <span class="s">email-validate</span>
+<span class="pi">-</span> <span class="s">bytestring</span>
+<span class="pi">-</span> <span class="s">containers</span>
+<span class="pi">-</span> <span class="s">wai-cors</span>
+<span class="pi">-</span> <span class="s">wai-extra</span>
+<span class="pi">-</span> <span class="s">http-types</span>
+<span class="pi">-</span> <span class="s">postgresql-simple</span>
+<span class="pi">-</span> <span class="s">postgresql-simple-migration</span>
+<span class="pi">-</span> <span class="s">resource-pool</span>
+<span class="pi">-</span> <span class="s">load-env</span>
+<span class="pi">-</span> <span class="s">time</span>
+</code></pre></div></div>
+
+<p>Let’s add a separate file to our <em>src</em> Directory and call it <em>DB.hs</em> this is the file where we will handle all of our database interactions.</p>
+
+<p>In our <em>src/Lib.hs</em> file lets add the following import.
+<em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span> <span class="k">qualified</span> <span class="nn">DB</span>
+</code></pre></div></div>
+
+<p>This will allow our file to be compiled with the rest of our application.</p>
+
+<p>Now the first thing we need to do is figure out what our schema is going to look like for our user in the database.</p>
+
+<p>We know that our users will have the following fields</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Email</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Password</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>What we will want to do is ensure that the email of all of our users is unique and that their passwords are not stored as plain text. In ordeer to do this we could always manually convert all of our inputs to match these requirements by calling <code class="highlighter-rouge">toLower</code> on the email and by adding the <code class="highlighter-rouge">bcrypt</code> package, but why would we do this when our storage engine has the capability to by just adding a few extensions and will enforce these requirements for us. The extensions we will use are <code class="highlighter-rouge">pgcrypto</code> and <code class="highlighter-rouge">citext</code>.</p>
+
+<p>Now what else might we want to add to our user model in our database. How about an image for when we allow profile image uploads via AWS S3, a created_at timestamp, and an about_me where users can tell us a bit about themselves. If we put all that together we get an sql file like this.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="n">extension</span> <span class="n">citext</span><span class="p">;</span>
+<span class="k">create</span> <span class="n">extension</span> <span class="n">pgcrypto</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">bigserial</span> <span class="k">primary</span> <span class="k">key</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
+  <span class="n">email</span> <span class="n">citext</span> <span class="k">not</span> <span class="k">null</span> <span class="k">unique</span><span class="p">,</span>
+  <span class="n">name</span> <span class="n">json</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">pass</span> <span class="nb">text</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
+  <span class="n">image</span> <span class="nb">text</span><span class="p">,</span>
+  <span class="n">about_me</span> <span class="nb">text</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>
+<span class="p">);</span>
+ 
+</code></pre></div></div>
+
+<p>Let’s first start off by creating a database for us to connect to (or make it however you would like to do it).</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-i</span> <span class="nt">-u</span> postgres psql
+<span class="nv">$ postgres</span><span class="o">=</span><span class="c"># CREATE USER ethan WITH PASSWORD 'scotty';</span>
+<span class="nv">$ postgres</span><span class="o">=</span><span class="c"># CREATE DATABASE scotty-tutorial WITH owner 'ethan';</span>
+<span class="nv">$ postgres</span><span class="o">=</span><span class="c"># \q</span>
+</code></pre></div></div>
+
+<p>And now lets get a connection to our database that we can use in our application.</p>
+
+<p>let’s add the following to our file.</p>
+
+<p><em>src/DB.hs</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module DB where
+
+import           Database.PostgreSQL.Simple
+
+getConn :: IO Connection
+getConn = do
+  let host = "127.0.0.1"
+  let port = 5432
+  let user = "ethan"
+  let pass = "scotty"
+  let db = "scotty-tutorial"
+  let cInfo = ConnectInfo host port user pass db
+  conn &lt;- connect cInfo
+  return $ conn
+</code></pre></div></div>
+
+<p>this uses the <code class="highlighter-rouge">connect :: ConnectInfo -&gt; IO Connection</code> function from <code class="highlighter-rouge">postgresql-simple</code> and the :</p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">ConnectInfo</span> <span class="o">=</span> <span class="kt">ConnectInfo</span> <span class="p">{</span>
+      <span class="n">connectHost</span> <span class="o">::</span> <span class="kt">String</span>
+    <span class="p">,</span> <span class="n">connectPort</span> <span class="o">::</span> <span class="kt">Word16</span>
+    <span class="p">,</span> <span class="n">connectUser</span> <span class="o">::</span> <span class="kt">String</span>
+    <span class="p">,</span> <span class="n">connectPassword</span> <span class="o">::</span> <span class="kt">String</span>
+    <span class="p">,</span> <span class="n">connectDatabase</span> <span class="o">::</span> <span class="kt">String</span>
+    <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">Eq</span><span class="p">,</span><span class="kt">Read</span><span class="p">,</span><span class="kt">Show</span><span class="p">,</span><span class="kt">Typeable</span><span class="p">)</span>
+</code></pre></div></div>
+<p>data type now it’s not good practice to hardcode your credentials into a file so this is the perfect opportunity to introduce the <code class="highlighter-rouge">load-env</code> Library. This allows us to import the environment variables from a .env file. Often times this is used with the create <code class="highlighter-rouge">configurator</code> library so that you can store multiple configurations in your file and use an environment variable to select the proper configuration, but for us we’ll stick with the <code class="highlighter-rouge">load-env</code> library for now and maybe use <code class="highlighter-rouge">configurator</code> in the future if we start to get into a more complex setup.</p>
+
+<p>lets make a <em>.env</em> file at the root of our directory and add the following to it (this is not in the src file it is the file above it that is the root.)</p>
+
+<p><em>/.env</em></p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PG_CONNECT_USER</span><span class="o">=</span>ethan
+<span class="nv">PG_CONNECT_HOST</span><span class="o">=</span>127.0.0.1
+<span class="nv">PG_CONNECT_PASSWORD</span><span class="o">=</span>scotty
+<span class="nv">PG_CONNECT_DATABASE</span><span class="o">=</span>scotty-tutorial
+<span class="nv">PG_CONNECT_PORT</span><span class="o">=</span>5432
+
+</code></pre></div></div>
+
+<p>Ok now to load the file we will call the following function: <code class="highlighter-rouge">loadEnvFrom :: FilePath -&gt; IO ()</code> from <code class="highlighter-rouge">load-env</code> in our <em>Lib.hs</em> file prior to doing anything else. Let’s add the proper imports and function call.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span> <span class="k">qualified</span> <span class="nn">LoadEnv</span> <span class="k">as</span> <span class="n">LE</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kt">LE</span><span class="o">.</span><span class="n">loadEnvFrom</span> <span class="s">"./.env"</span>
+  <span class="n">app</span>
+</code></pre></div></div>
+<p>Great now we should have access to all our Environemnt variables that we just declared in our <em>/.env</em> file. So lets go back to our database file and make a function that collects the values associated with the environement variables and spits out a <code class="highlighter-rouge">ConnectInfo</code>. To do this we will need the <code class="highlighter-rouge">System.Environment</code> package that comes with the <code class="highlighter-rouge">prelude</code>. We have two options for the functions that we can use <code class="highlighter-rouge">getEnv :: String -&gt; IO String</code> or we can use <code class="highlighter-rouge">lookupEnv :: String -&gt; IO (Maybe String)</code> In my opinion the best option for use is <code class="highlighter-rouge">getEnv</code> because we would like our application to fail if we dont have the proper variables.</p>
+
+<p>Let’s import this package in our file and then get those variables.</p>
+
+<p><em>src/DB.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">DB</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">System.Environment</span> <span class="k">as</span> <span class="n">SE</span>
+<span class="kr">import</span>           <span class="nn">Data.Word</span>
+
+
+<span class="n">getConnectInfo</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">ConnectInfo</span>
+<span class="n">getConnectInfo</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">host</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_HOST"</span> 
+  <span class="n">port</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PORT"</span>
+  <span class="n">user</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_USER"</span>
+  <span class="n">db</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_DATABASE"</span>
+  <span class="n">pass</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PASSWORD"</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="kt">ConnectInfo</span> <span class="n">host</span> <span class="p">(</span><span class="n">read</span> <span class="n">port</span> <span class="o">::</span> <span class="kt">Word16</span><span class="p">)</span> <span class="n">user</span> <span class="n">pass</span> <span class="n">db</span>
+
+<span class="n">getConn</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">Connection</span>
+<span class="n">getConn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">connect</span> <span class="n">cInfo</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">conn</span>
+</code></pre></div></div>
+
+<p>The port comes as type <code class="highlighter-rouge">String</code> and we need to covert it to <code class="highlighter-rouge">Word16</code> so we use the <code class="highlighter-rouge">read</code> function and convert the string to a <code class="highlighter-rouge">Word16</code> value which we also import from <code class="highlighter-rouge">Data.Word</code>.</p>
+
+<p>Ok so now that we have a connection let’s use it to migrate/initialize our database. The <code class="highlighter-rouge">postgresql-simple-migration</code> libary is our tool for this and we will use the following functions:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">withTransaction</span> <span class="o">::</span> <span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="n">a</span>
+
+<span class="n">runMigrations</span> <span class="o">::</span> <span class="kt">Bool</span> <span class="o">-&gt;</span> <span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">MigrationCommand</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">MigrationResult</span> <span class="kt">String</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We want to wrap our migrations in a transaction so we will supply the connection via withTransaction and we also want to take advatage of the following commands so that we can write our SQL files in a directory: <code class="highlighter-rouge">MigrationInitialization, MigrationDirectory FilePath</code> this will allow us to initialize our migrations and also to run the scripts in a file that we have somewhere on our computer the most convenient place is the root of our directory so lets make the folder <em>./migrations</em> and lets put a file in there <em>./migrations/001_users.sql</em>. In that file we will put our sql that we came up with earlier to represnt our users table:</p>
+
+<p><em>./migrations/001_users.sql</em></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="n">extension</span> <span class="n">citext</span><span class="p">;</span>
+<span class="k">create</span> <span class="n">extension</span> <span class="n">pgcrypto</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">bigserial</span> <span class="k">primary</span> <span class="k">key</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
+  <span class="n">email</span> <span class="n">citext</span> <span class="k">not</span> <span class="k">null</span> <span class="k">unique</span><span class="p">,</span>
+  <span class="n">name</span> <span class="n">json</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">pass</span> <span class="nb">text</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
+  <span class="n">image</span> <span class="nb">text</span><span class="p">,</span>
+  <span class="n">about_me</span> <span class="nb">text</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+<p>and we’ll add the following to our file:</p>
+
+<p><em>src/DB.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">DB</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">System.Environment</span> <span class="k">as</span> <span class="n">SE</span>
+<span class="kr">import</span>           <span class="nn">Data.Word</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.Migration</span>
+
+<span class="o">...</span>
+
+<span class="n">migrateDB</span> <span class="o">::</span> <span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">migrateDB</span> <span class="n">conn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">res</span> <span class="o">&lt;-</span> <span class="n">withTransaction</span> <span class="n">conn</span> <span class="p">(</span><span class="n">runMigrations</span> <span class="kt">False</span> <span class="n">conn</span> <span class="p">[</span><span class="kt">MigrationInitialization</span><span class="p">,</span> <span class="kt">MigrationDirectory</span> <span class="s">"./migrations"</span><span class="p">])</span>
+  <span class="n">print</span> <span class="n">res</span>
+</code></pre></div></div>
+
+<p>The reason we add <em>001_</em> to our file is because we want to make sure that the order of our file’s being executed is correct. The next file will be <em>002_</em> the <code class="highlighter-rouge">postgresql-simple-migration</code> library only allows for linear migrations which if you’re coming from a more popular migration library in another language is probably annoying but for our applicaiton it gets the job done.</p>
+
+<p>Now let’s add a function that ties in all this logic together and returns a connection for our applicaiton to use after it is done migrating. Our Function should look like this</p>
+
+<p><em>src/DB.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">DB</span> <span class="p">(</span><span class="nf">initDB</span><span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">System.Environment</span> <span class="k">as</span> <span class="n">SE</span>
+<span class="kr">import</span>           <span class="nn">Data.Word</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.Migration</span>
+
+<span class="n">getConnectInfo</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">ConnectInfo</span>
+<span class="n">getConnectInfo</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">host</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_HOST"</span> 
+  <span class="n">port</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PORT"</span>
+  <span class="n">user</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_USER"</span>
+  <span class="n">db</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_DATABASE"</span>
+  <span class="n">pass</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PASSWORD"</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="kt">ConnectInfo</span> <span class="n">host</span> <span class="p">(</span><span class="n">read</span> <span class="n">port</span> <span class="o">::</span> <span class="kt">Word16</span><span class="p">)</span> <span class="n">user</span> <span class="n">pass</span> <span class="n">db</span>
+
+<span class="n">getConn</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">Connection</span>
+<span class="n">getConn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">connect</span> <span class="n">cInfo</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">conn</span>
+
+<span class="n">migrateDB</span> <span class="o">::</span> <span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">migrateDB</span> <span class="n">conn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">res</span> <span class="o">&lt;-</span> <span class="n">withTransaction</span> <span class="n">conn</span> <span class="p">(</span><span class="n">runMigrations</span> <span class="kt">False</span> <span class="n">conn</span> <span class="p">[</span><span class="kt">MigrationInitialization</span><span class="p">,</span> <span class="kt">MigrationDirectory</span> <span class="s">"./migrations"</span><span class="p">])</span>
+  <span class="n">print</span> <span class="n">res</span>
+
+<span class="n">initDB</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">Connection</span>
+<span class="n">initDB</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">getConn</span> 
+  <span class="n">migrateDB</span> <span class="n">conn</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">conn</span>
+</code></pre></div></div>
+
+<p>and now we add the following to our <em>Lib.hs</em></p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson.Types</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">DB</span> <span class="k">as</span> <span class="n">DB</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">LoadEnv</span> <span class="k">as</span> <span class="n">LE</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kt">LE</span><span class="o">.</span><span class="n">loadEnvFrom</span> <span class="s">"./.env"</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="kt">DB</span><span class="o">.</span><span class="n">initDB</span>
+  <span class="n">app</span>
+
+<span class="o">...</span>
+</code></pre></div></div>
+<p>Now let’s run the following:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack build
+<span class="nv">$ </span>stack <span class="nb">exec </span>scotty-tutorial-exe
+</code></pre></div></div>
+
+<p>and we should see this printed to the console:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MigrationSuccess
+</code></pre></div></div>
+
+<p>Now lets kill our server and run it again. you’ll see the following line:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NOTICE:  relation "schema_migrations" already exists, skipping
+</code></pre></div></div>
+
+<p>If you want you can take out the <code class="highlighter-rouge">MigrationInitialization</code> Command but it’s fine to be in there.</p>
+
+<p>Unfortunately right now all we have is one connection that’s probably not a very good decision for us in terms of design. Most db libraries I’ve used in other languages handle the conneciton pooling for you but <code class="highlighter-rouge">postgresql-simple</code> doesn’t so we will implement this using the <code class="highlighter-rouge">resource-pool</code> package. The chief functions of interest to us are:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">createPool</span>
+    <span class="o">::</span> <span class="kt">IO</span> <span class="n">a</span>
+    <span class="c1">-- ^ Action that creates a new resource.</span>
+    <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span><span class="p">)</span>
+    <span class="c1">-- ^ Action that destroys an existing resource.</span>
+    <span class="o">-&gt;</span> <span class="kt">Int</span>
+    <span class="c1">-- ^ The number of stripes (distinct sub-pools) to maintain.</span>
+    <span class="c1">-- The smallest acceptable value is 1.</span>
+    <span class="o">-&gt;</span> <span class="kt">NominalDiffTime</span>
+    <span class="c1">-- ^ Amount of time for which an unused resource is kept open.</span>
+    <span class="c1">-- The smallest acceptable value is 0.5 seconds.</span>
+    <span class="c1">--</span>
+    <span class="c1">-- The elapsed time before destroying a resource may be a little</span>
+    <span class="c1">-- longer than requested, as the reaper thread wakes at 1-second</span>
+    <span class="c1">-- intervals.</span>
+    <span class="o">-&gt;</span> <span class="kt">Int</span>
+    <span class="c1">-- ^ Maximum number of resources to keep open per stripe.  The</span>
+    <span class="c1">-- smallest acceptable value is 1.</span>
+    <span class="c1">--</span>
+    <span class="c1">-- Requests for resources will block if this limit is reached on a</span>
+    <span class="c1">-- single stripe, even if other stripes have idle resources</span>
+    <span class="c1">-- available.</span>
+     <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="n">a</span><span class="p">)</span>
+
+<span class="n">withResource</span> <span class="o">::</span> <span class="p">(</span><span class="kt">MonadBaseControl</span> <span class="kt">IO</span> <span class="n">m</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kt">Pool</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">m</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">m</span> <span class="n">b</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">withResource</code> allows us to supply a connection to a function and then put that connection back into the pool when we are done with it. This follows the common <code class="highlighter-rouge">bracket</code> pattern found in <code class="highlighter-rouge">base</code></p>
+
+<p>so lets reimplement our <code class="highlighter-rouge">getConn</code> function to be <code class="highlighter-rouge">getPool</code>.</p>
+
+<p><em>src/DB.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+
+<span class="o">...</span>
+
+<span class="n">getPool</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+<span class="n">getPool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">createPool</span> <span class="p">(</span><span class="n">connect</span> <span class="n">cInfo</span><span class="p">)</span> <span class="n">close</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">5</span>
+
+<span class="n">showConnectCount</span> <span class="err">∷</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">showConnectCount</span> <span class="o">=</span> <span class="kr">do</span>
+	<span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+    <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">connect</span> <span class="n">cInfo</span>
+    <span class="n">x</span> <span class="o">&lt;-</span> <span class="n">query_</span> <span class="n">conn</span> <span class="s">"SELECT COUNT (*) FROM pg_stat_activity"</span>
+    <span class="kr">let</span> <span class="n">c</span> <span class="o">=</span> <span class="n">fromOnly</span> <span class="err">∘</span> <span class="n">head</span> <span class="o">$</span> <span class="p">(</span><span class="n">x</span> <span class="err">∷</span> <span class="p">[</span><span class="kt">Only</span> <span class="kt">Integer</span><span class="p">])</span>
+    <span class="n">close</span> <span class="n">conn</span>
+    <span class="n">print</span> <span class="n">c</span>
+</code></pre></div></div>
+
+<p>This will open 2 stripes to the database with 5 connections per stripe and it will destroy a resource after 5 seconds of being idle. The <code class="highlighter-rouge">showConnectCount</code> is just a utiltiy function that you can use if you would like to see how many connections you have open at any given time.</p>
+
+<p>Now lets make a helper function <code class="highlighter-rouge">withPool</code> that we will use to supply connections to our functions that require interacting with the Database, and that will round out the bulk of the work that needs to be done for DB interfacing. Our file should now look like this</p>
+
+<p><em>src/DB.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">DB</span> 
+  <span class="p">(</span> <span class="nf">initDB</span>
+  <span class="p">,</span> <span class="nf">showConnectCount</span>
+  <span class="p">,</span> <span class="nf">withPool</span>
+  <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">System.Environment</span> <span class="k">as</span> <span class="n">SE</span>
+<span class="kr">import</span>           <span class="nn">Data.Word</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.Migration</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+
+<span class="n">getConnectInfo</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">ConnectInfo</span>
+<span class="n">getConnectInfo</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">host</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_HOST"</span> 
+  <span class="n">port</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PORT"</span>
+  <span class="n">user</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_USER"</span>
+  <span class="n">db</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_DATABASE"</span>
+  <span class="n">pass</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PASSWORD"</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="kt">ConnectInfo</span> <span class="n">host</span> <span class="p">(</span><span class="n">read</span> <span class="n">port</span> <span class="o">::</span> <span class="kt">Word16</span><span class="p">)</span> <span class="n">user</span> <span class="n">pass</span> <span class="n">db</span>
+
+<span class="n">getConn</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">Connection</span>
+<span class="n">getConn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">connect</span> <span class="n">cInfo</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">conn</span>
+
+<span class="n">getPool</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+<span class="n">getPool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">createPool</span> <span class="p">(</span><span class="n">connect</span> <span class="n">cInfo</span><span class="p">)</span> <span class="n">close</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">5</span>
+
+<span class="n">migrateDB</span> <span class="o">::</span> <span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">migrateDB</span> <span class="n">conn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">res</span> <span class="o">&lt;-</span> <span class="n">withTransaction</span> <span class="n">conn</span> <span class="p">(</span><span class="n">runMigrations</span> <span class="kt">False</span> <span class="n">conn</span> <span class="p">[</span><span class="kt">MigrationDirectory</span> <span class="s">"./migrations"</span><span class="p">])</span>
+  <span class="n">print</span> <span class="n">res</span>
+
+<span class="n">withPool</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="n">a</span>
+<span class="n">withPool</span> <span class="n">pool</span> <span class="n">action</span> <span class="o">=</span> <span class="n">withResource</span> <span class="n">pool</span> <span class="n">action</span>
+
+<span class="n">initDB</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+<span class="n">initDB</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">pool</span> <span class="o">&lt;-</span> <span class="n">getPool</span>
+  <span class="n">withPool</span> <span class="n">pool</span> <span class="n">migrateDB</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">pool</span>
+
+<span class="n">showConnectCount</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">showConnectCount</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">getConn</span>
+  <span class="n">x</span> <span class="o">&lt;-</span> <span class="n">query_</span> <span class="n">conn</span> <span class="s">"SELECT COUNT (*) FROM pg_stat_activity"</span>
+  <span class="kr">let</span> <span class="n">c</span> <span class="o">=</span> <span class="n">fromOnly</span> <span class="o">.</span> <span class="n">head</span> <span class="o">$</span> <span class="p">(</span><span class="n">x</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Only</span> <span class="kt">Integer</span><span class="p">])</span>
+  <span class="n">close</span> <span class="n">conn</span>
+  <span class="n">print</span> <span class="n">c</span>
+</code></pre></div></div>
+
+<p>Now It’s time to actually save a user into the database. notice that despite the verbosity of this post we were able to create a fairly concise DB interface almost from scratch with very few libraries (2) and with the addtion of one more library we were able to add migrations to this small set of functions. and we’ve yet to do anything that is very technical in terms of <code class="highlighter-rouge">haskell</code> no need for Tansformers, Free Monads, Tagless Final.</p>
+
+<p><em>NOTE: scotty is actually implemented as a monad transformer but it hides those details away from us when using just the <strong>scotty</strong> function which is helpful</em></p>
+
+<p>In order to save our user into the database we will need to create a <code class="highlighter-rouge">ToRow</code> instance of our user (or we can manually extract the paramters but there’s really no need to do that)</p>
+
+<p>Let’s go into our <em>Lib.hs</em> file import the necessary library and write our instance</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToRow</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToField</span>
+
+<span class="o">...</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">name</span> <span class="o">=</span> <span class="n">object</span> 
+   <span class="p">[</span> <span class="s">"firstname"</span> <span class="o">.=</span> <span class="n">firstname</span> <span class="n">name</span>
+   <span class="p">,</span> <span class="s">"lastname"</span> <span class="o">.=</span> <span class="n">lastname</span> <span class="n">name</span>
+   <span class="p">]</span>
+
+<span class="kr">instance</span> <span class="kt">ToField</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">toField</span> <span class="n">a</span> <span class="o">=</span> <span class="n">toJSONField</span> <span class="n">a</span>
+
+<span class="kr">instance</span> <span class="kt">ToRow</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">toRow</span> <span class="n">user</span> <span class="o">=</span> <span class="p">[</span><span class="n">toField</span> <span class="p">(</span><span class="n">email</span> <span class="n">user</span><span class="p">),</span> <span class="n">toField</span> <span class="p">(</span><span class="n">password</span> <span class="n">user</span><span class="p">),</span> <span class="n">toField</span> <span class="p">(</span><span class="n">name</span> <span class="n">user</span><span class="p">)]</span>
+
+</code></pre></div></div>
+
+<p>So we write our <code class="highlighter-rouge">ToRow</code> instance for <code class="highlighter-rouge">UserSignup</code> and we also need to write a <code class="highlighter-rouge">ToField</code> instance for <code class="highlighter-rouge">Name</code> so that we can save that into our database. The <code class="highlighter-rouge">toRow</code> function expects an array of actions <code class="highlighter-rouge">[Aciton]</code> and the <code class="highlighter-rouge">toField</code> function expects a value with a <code class="highlighter-rouge">ToField</code> typeclass constraint. Luckily we don’t need to provide these for each field as <code class="highlighter-rouge">postgresql-simple</code> takes care of many common datatypes for us however it doesn’t have an instance for json values. instead it gives us the elper function toJSONField which takes a value with a ToJSON instance and converts it into a value that can be handled by postgresql-simple.</p>
+
+<p>Perfect we’re almost there. Lets write the function to add the user to the database now.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span>           <span class="nn">Data.Int</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+<span class="o">...</span>
+
+<span class="n">addUserToDB</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UserSignup</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Int64</span><span class="p">)</span>
+<span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">usr</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">val</span> <span class="o">&lt;-</span> <span class="kt">DB</span><span class="o">.</span><span class="n">withPool</span> <span class="n">pool</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="n">execute</span> <span class="n">c</span> <span class="n">statement</span> <span class="n">usr</span><span class="p">)</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">val</span>
+  <span class="kr">where</span> <span class="n">statement</span> <span class="o">=</span> <span class="s">"INSERT INTO users (email, password, name) VALUES (?, crypt(?, gen_salt('bf', 8)), ?)"</span>
+
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>so the <code class="highlighter-rouge">addUserToDB</code> function takes a <code class="highlighter-rouge">Connection Pool</code> and a <code class="highlighter-rouge">UserSignup</code> and it outputs the ID of the user that was just created. Which is just what we want. the <code class="highlighter-rouge">execute</code> function looks like this: <code class="highlighter-rouge">execute :: (ToRow a) =&gt; Connection -&gt; Query -&gt; a -&gt; IO Int64</code>. Int64 isn’t included in the prelude but it is in base so we need to include it by importing <code class="highlighter-rouge">Data.Int</code>.</p>
+
+<p>Well let’s give it a shot let’s wire up our “/user” route so that it creates a user in our database.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+    <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+    <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">status</span> <span class="n">status400</span>
+        <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">uId</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">s</span> 
+        <span class="n">text</span> <span class="o">$</span> <span class="kt">TL</span><span class="o">.</span><span class="n">pack</span> <span class="p">(</span><span class="n">show</span> <span class="n">uId</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We’ll be using the <code class="highlighter-rouge">liftAndCatchIO</code> function for now to handle this as it comes with the <code class="highlighter-rouge">scotty</code> library and we’d like to keep this simple. The <code class="highlighter-rouge">addUserToDB</code> function has a result <code class="highlighter-rouge">IO (Int64)</code> but the <code class="highlighter-rouge">post</code> function has type <code class="highlighter-rouge">post :: RoutePattern -&gt; ActionM () -&gt; ScottyM ()</code> when we are using <code class="highlighter-rouge">IO</code> in this function we must lift that IO up into the ActionM () monad. Typically this is done with the function <code class="highlighter-rouge">liftIO</code> but we will use the utility that comes with the <code class="highlighter-rouge">scotty</code> library for now.</p>
+
+<p>Ok let’s fire up the server and see if this works!</p>
+
+<p>I’m going to send the following JSON data</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ethan"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gardner"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner@ethan.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Holamundo@1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>And now we get back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1
+</code></pre></div></div>
+
+<p>Ok things are working as expected now let’s see what happens when we send the same data to test for unique constraint violations.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h1&gt;500 Internal Server Error&lt;/h1&gt;SqlError {sqlState = "23505", sqlExecStatus = FatalError, sqlErrorMsg = "duplicate key value violates unique constraint \"users_email_key\"", sqlErrorDetail = "Key (email)=(ethangardner@ethan.com) already exists.", sqlErrorHint = ""}
+</code></pre></div></div>
+
+<p>Well that’s sort of good. The database didn’t save a duplicate record but we just sent our user a terrible looking response. Let’s wrap our query in an Either statement to try and clean this up.</p>
+
+<p>In order to catch this exception we will use the <code class="highlighter-rouge">try</code> function in the <code class="highlighter-rouge">Control.Exception</code> library. So we’ll change our with pool function to this:</p>
+
+<p><em>src/DB.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">withPool</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">SqlError</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">withPool</span> <span class="n">pool</span> <span class="n">action</span> <span class="o">=</span> <span class="n">try</span> <span class="p">(</span><span class="n">withResource</span> <span class="n">pool</span> <span class="n">action</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>That should be sufficient to catch the error we’re looking for. Now SqlError has the following structure:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">SqlError</span> <span class="o">=</span> <span class="kt">SqlError</span> <span class="p">{</span>
+     <span class="n">sqlState</span>       <span class="o">::</span> <span class="kt">ByteString</span>
+   <span class="p">,</span> <span class="n">sqlExecStatus</span>  <span class="o">::</span> <span class="kt">ExecStatus</span>
+   <span class="p">,</span> <span class="n">sqlErrorMsg</span>    <span class="o">::</span> <span class="kt">ByteString</span>
+   <span class="p">,</span> <span class="n">sqlErrorDetail</span> <span class="o">::</span> <span class="kt">ByteString</span>
+   <span class="p">,</span> <span class="n">sqlErrorHint</span>   <span class="o">::</span> <span class="kt">ByteString</span>
+   <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">,</span> <span class="kt">Typeable</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>What we’re looking for from PostgreSQL is a unique constraint violation. We can find this here: https://www.postgresql.org/docs/10/errcodes-appendix.html</p>
+
+<p>Persuing through the table we see that unique constraint violation has code: 23505. If you look back at the response we got from our server you’ll see that sqlState was set to “23505” of let’s write the error handling piece of our code and use our new <code class="highlighter-rouge">withPool</code> function in the route handler.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+
+<span class="n">app</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+    <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+    <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">status</span> <span class="n">status400</span>
+        <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">uId</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">s</span>
+        <span class="kr">case</span> <span class="p">(</span><span class="n">uId</span><span class="p">)</span> <span class="kr">of</span> 
+         <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+          <span class="n">status</span> <span class="n">status400</span>
+          <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+         <span class="kt">Right</span> <span class="n">uid</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="o">$</span> <span class="kt">TL</span><span class="o">.</span><span class="n">pack</span> <span class="p">(</span><span class="n">show</span> <span class="n">uid</span><span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="n">addUserToDB</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UserSignup</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">String</span> <span class="kt">Int64</span><span class="p">)</span>
+<span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">usr</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">val</span> <span class="o">&lt;-</span> <span class="kt">DB</span><span class="o">.</span><span class="n">withPool</span> <span class="n">pool</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="n">execute</span> <span class="n">c</span> <span class="n">statement</span> <span class="n">usr</span><span class="p">)</span>
+  <span class="kr">case</span> <span class="n">val</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">sqlState</span> <span class="n">e</span><span class="p">)</span> <span class="kr">of</span>
+      <span class="p">(</span><span class="s">"23505"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="s">"That email is already taken please try signing up with a different email."</span>
+      <span class="kr">_</span>         <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="o">$</span> <span class="s">"Unexpected Server Error. Please try again later."</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Right</span> <span class="n">s</span> 
+  <span class="kr">where</span> <span class="n">statement</span> <span class="o">=</span> <span class="s">"INSERT INTO users (email, password, name) VALUES (?, crypt(?, gen_salt('bf', 8)), ?)"</span>
+
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Now lets fire up our server and try sending that json over again and we get the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "message": "That email is already taken please try signing up with a different email."
+}
+</code></pre></div></div>
+
+<p>Perfect that’s just what we wanted to show our new user. Now we didn’t really properly handle that server error because our unexpected error should have thrown a 500. We could use <code class="highlighter-rouge">error</code> to throw that but there’s not much of a purpose for that right now instead we’ll take care of that when we start refactoring our app and going over Logging.</p>
+
+<p>Ok we’re in a pretty good spot right now but our files are a little messy and I think it’s safe to refactor our application now. Refactor haskell apps is such an incredible experience if you’ve come from most other languages. You won’t get to experience much of it on this refactor as we’re really just changing the folder structure, but you should be able to see it later.</p>
+
+<p>For this project we are going to separate our Domain by Feature and We’ll write Adapters for our external services.</p>
+
+<p>Our files currently look like this:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson.Types</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+<span class="kr">import</span>           <span class="nn">Network.HTTP.Types.Status</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">LoadEnv</span> <span class="k">as</span> <span class="n">LE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">DB</span> <span class="k">as</span> <span class="n">DB</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToRow</span>
+<span class="kr">import</span>           <span class="nn">Data.Int</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToField</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kt">LE</span><span class="o">.</span><span class="n">loadEnvFrom</span> <span class="s">"./.env"</span>
+  <span class="n">pool</span> <span class="o">&lt;-</span> <span class="kt">DB</span><span class="o">.</span><span class="n">initDB</span>
+  <span class="n">app</span> <span class="n">pool</span>
+
+<span class="n">app</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+    <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+    <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">status</span> <span class="n">status400</span>
+        <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">uId</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">s</span>
+        <span class="kr">case</span> <span class="p">(</span><span class="n">uId</span><span class="p">)</span> <span class="kr">of</span> 
+         <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+          <span class="n">status</span> <span class="n">status400</span>
+          <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+         <span class="kt">Right</span> <span class="n">uid</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="o">$</span> <span class="kt">TL</span><span class="o">.</span><span class="n">pack</span> <span class="p">(</span><span class="n">show</span> <span class="n">uid</span><span class="p">)</span>
+
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+
+<span class="n">mkName</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Name</span>
+<span class="n">mkName</span> <span class="n">fName</span> <span class="n">lName</span> <span class="o">=</span> <span class="kt">Name</span> <span class="o">&lt;$&gt;</span> <span class="n">fstName</span> <span class="o">&lt;*&gt;</span> <span class="n">lstName</span> 
+ <span class="kr">where</span> <span class="n">fstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">fName</span>
+       <span class="n">lstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">lName</span>
+
+<span class="n">mkUserSignup</span> <span class="o">::</span> <span class="kt">Name</span> <span class="o">-&gt;</span> <span class="kt">Email</span> <span class="o">-&gt;</span> <span class="kt">Password</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">UserSignup</span>
+<span class="n">mkUserSignup</span> <span class="n">na</span> <span class="n">em</span> <span class="n">pass</span> <span class="o">=</span> <span class="kt">UserSignup</span> <span class="o">&lt;$&gt;</span> <span class="n">mkName</span> <span class="p">(</span><span class="n">firstname</span> <span class="n">na</span><span class="p">)</span> <span class="p">(</span><span class="n">lastname</span> <span class="n">na</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">validateEmail</span> <span class="n">em</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">passwordValidation</span> <span class="n">pass</span><span class="p">)</span>  
+
+<span class="n">nameFieldTester</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">NameField</span>
+<span class="n">nameFieldTester</span> <span class="n">field</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="n">otherwise</span>           <span class="o">=</span> <span class="kt">Right</span> <span class="n">field</span>
+ <span class="kr">where</span> <span class="n">nameError</span> <span class="o">=</span> <span class="s">"Name Fields must be less than 50 characters and Greater than 0 characters"</span>
+
+<span class="n">passwordValidation</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Password</span>
+<span class="n">passwordValidation</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">8</span>  <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="p">(</span><span class="n">passwordStrength</span> <span class="n">a</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Right</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="kr">where</span> <span class="n">passwordErrorMessage</span> <span class="o">=</span> <span class="s">"Passwords Must be greater than 8 Characters and less than 20 and have at least 1 uppercase letter and 1 special or numeric character"</span>
+
+<span class="n">passwordStrength</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">passwordStrength</span> <span class="n">a</span> <span class="n">lowercases</span> <span class="n">uppercases</span> <span class="n">specialcases</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span>                   <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kr">if</span> <span class="p">((</span><span class="n">lowercases</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="kr">then</span> <span class="p">(</span><span class="kt">True</span><span class="p">)</span> <span class="kr">else</span> <span class="p">(</span><span class="kt">False</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">lowerCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span> 
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">upperCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">specialCases</span> <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">True</span>
+ <span class="kr">where</span> <span class="n">lowerCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'a'</span><span class="o">..</span><span class="sc">'z'</span><span class="p">]</span>
+       <span class="n">upperCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'A'</span><span class="o">..</span><span class="sc">'Z'</span><span class="p">]</span>
+       <span class="n">specialCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span> <span class="sc">'4'</span><span class="p">,</span> <span class="sc">'5'</span><span class="p">,</span> <span class="sc">'6'</span><span class="p">,</span> <span class="sc">'7'</span><span class="p">,</span> <span class="sc">'8'</span><span class="p">,</span> <span class="sc">'9'</span><span class="p">,</span> <span class="sc">'!'</span><span class="p">,</span> <span class="sc">'@'</span><span class="p">,</span> <span class="sc">'#'</span><span class="p">,</span> <span class="sc">'$'</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'^'</span><span class="p">,</span> <span class="sc">'&amp;'</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'?'</span><span class="p">]</span>
+ 
+<span class="n">validateEmail</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Email</span>
+<span class="n">validateEmail</span> <span class="n">candidate</span> <span class="o">=</span> 
+ <span class="kr">case</span> <span class="n">isEmail</span> <span class="kr">of</span>
+  <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kt">Left</span> <span class="p">(</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+  <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kt">Right</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">decodeUtf8</span> <span class="o">$</span> <span class="kt">EV</span><span class="o">.</span><span class="n">toByteString</span> <span class="n">s</span><span class="p">)</span>
+ <span class="kr">where</span> <span class="n">isEmail</span> <span class="o">=</span> <span class="kt">EV</span><span class="o">.</span><span class="n">validate</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">encodeUtf8</span> <span class="n">candidate</span><span class="p">)</span>
+
+<span class="n">addUserToDB</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UserSignup</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">String</span> <span class="kt">Int64</span><span class="p">)</span>
+<span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">usr</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">val</span> <span class="o">&lt;-</span> <span class="kt">DB</span><span class="o">.</span><span class="n">withPool</span> <span class="n">pool</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="n">execute</span> <span class="n">c</span> <span class="n">statement</span> <span class="n">usr</span><span class="p">)</span>
+  <span class="kr">case</span> <span class="n">val</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">sqlState</span> <span class="n">e</span><span class="p">)</span> <span class="kr">of</span>
+      <span class="p">(</span><span class="s">"23505"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="s">"That email is already taken please try signing up with a different email."</span>
+      <span class="kr">_</span>         <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="o">$</span> <span class="s">"Unexpected Server Error. Please try again later."</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Right</span> <span class="n">s</span> 
+  <span class="kr">where</span> <span class="n">statement</span> <span class="o">=</span> <span class="s">"INSERT INTO users (email, password, name) VALUES (?, crypt(?, gen_salt('bf', 8)), ?)"</span>
+
+<span class="kr">type</span> <span class="kt">Email</span>     <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">Password</span>  <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">NameField</span> <span class="o">=</span> <span class="kt">Text</span>
+
+<span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Email</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Password</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">Name</span> <span class="o">=</span> <span class="kt">Name</span>
+  <span class="p">{</span> <span class="n">firstname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">,</span> <span class="n">lastname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">JSONError</span> <span class="o">=</span> <span class="kt">JSONError</span> <span class="p">{</span> <span class="n">message</span> <span class="o">::</span> <span class="kt">String</span> <span class="p">}</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">JSONError</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">je</span> <span class="o">=</span> <span class="n">object</span> <span class="p">[</span><span class="s">"message"</span> <span class="o">.=</span> <span class="n">message</span> <span class="n">je</span><span class="p">]</span>
+
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="kr">do</span>
+   <span class="n">n</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"name"</span>
+   <span class="n">e</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"email"</span>
+   <span class="n">p</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"password"</span>
+   <span class="kr">case</span> <span class="p">(</span><span class="n">mkUserSignup</span> <span class="n">n</span> <span class="n">e</span> <span class="n">p</span><span class="p">)</span> <span class="kr">of</span>
+     <span class="kt">Left</span> <span class="n">er</span> <span class="o">-&gt;</span> <span class="n">fail</span> <span class="o">$</span> <span class="p">(</span><span class="n">unpack</span> <span class="n">er</span><span class="p">)</span>
+     <span class="kt">Right</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="n">r</span> 
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to be an object"</span>
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span>
+   <span class="kt">Name</span> <span class="o">&lt;$&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"firstname"</span>  <span class="o">&lt;*&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"lastname"</span>
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to have a name of type object"</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">name</span> <span class="o">=</span> <span class="n">object</span> 
+   <span class="p">[</span> <span class="s">"firstname"</span> <span class="o">.=</span> <span class="n">firstname</span> <span class="n">name</span>
+   <span class="p">,</span> <span class="s">"lastname"</span> <span class="o">.=</span> <span class="n">lastname</span> <span class="n">name</span>
+   <span class="p">]</span>
+
+<span class="kr">instance</span> <span class="kt">ToField</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">toField</span> <span class="n">a</span> <span class="o">=</span> <span class="n">toJSONField</span> <span class="n">a</span>
+
+<span class="kr">instance</span> <span class="kt">ToRow</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">toRow</span> <span class="n">user</span> <span class="o">=</span> <span class="p">[</span><span class="n">toField</span> <span class="p">(</span><span class="n">email</span> <span class="n">user</span><span class="p">),</span> <span class="n">toField</span> <span class="p">(</span><span class="n">password</span> <span class="n">user</span><span class="p">),</span> <span class="n">toField</span> <span class="p">(</span><span class="n">name</span> <span class="n">user</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<p><em>src/DB.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">DB</span> 
+  <span class="p">(</span> <span class="nf">initDB</span>
+  <span class="p">,</span> <span class="nf">showConnectCount</span>
+  <span class="p">,</span> <span class="nf">withPool</span>
+  <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">System.Environment</span> <span class="k">as</span> <span class="n">SE</span>
+<span class="kr">import</span>           <span class="nn">Data.Word</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.Migration</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+<span class="kr">import</span>           <span class="nn">Control.Exception</span>
+
+<span class="n">getConnectInfo</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">ConnectInfo</span>
+<span class="n">getConnectInfo</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">host</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_HOST"</span> 
+  <span class="n">port</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PORT"</span>
+  <span class="n">user</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_USER"</span>
+  <span class="n">db</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_DATABASE"</span>
+  <span class="n">pass</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PASSWORD"</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="kt">ConnectInfo</span> <span class="n">host</span> <span class="p">(</span><span class="n">read</span> <span class="n">port</span> <span class="o">::</span> <span class="kt">Word16</span><span class="p">)</span> <span class="n">user</span> <span class="n">pass</span> <span class="n">db</span>
+
+<span class="n">getConn</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">Connection</span>
+<span class="n">getConn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">connect</span> <span class="n">cInfo</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">conn</span>
+
+<span class="n">getPool</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+<span class="n">getPool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">createPool</span> <span class="p">(</span><span class="n">connect</span> <span class="n">cInfo</span><span class="p">)</span> <span class="n">close</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">5</span>
+
+<span class="n">migrateDB</span> <span class="o">::</span> <span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">migrateDB</span> <span class="n">conn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">res</span> <span class="o">&lt;-</span> <span class="n">withTransaction</span> <span class="n">conn</span> <span class="p">(</span><span class="n">runMigrations</span> <span class="kt">False</span> <span class="n">conn</span> <span class="p">[</span><span class="kt">MigrationInitialization</span><span class="p">,</span> <span class="kt">MigrationDirectory</span> <span class="s">"./migrations"</span><span class="p">])</span>
+  <span class="n">print</span> <span class="n">res</span>
+
+<span class="n">withPool</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">SqlError</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">withPool</span> <span class="n">pool</span> <span class="n">action</span> <span class="o">=</span> <span class="n">try</span> <span class="p">(</span><span class="n">withResource</span> <span class="n">pool</span> <span class="n">action</span><span class="p">)</span>
+
+<span class="n">initDB</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+<span class="n">initDB</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">pool</span> <span class="o">&lt;-</span> <span class="n">getPool</span>
+  <span class="n">withPool</span> <span class="n">pool</span> <span class="n">migrateDB</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">pool</span>
+
+<span class="n">showConnectCount</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">showConnectCount</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">getConn</span>
+  <span class="n">x</span> <span class="o">&lt;-</span> <span class="n">query_</span> <span class="n">conn</span> <span class="s">"SELECT COUNT (*) FROM pg_stat_activity"</span>
+  <span class="kr">let</span> <span class="n">c</span> <span class="o">=</span> <span class="n">fromOnly</span> <span class="o">.</span> <span class="n">head</span> <span class="o">$</span> <span class="p">(</span><span class="n">x</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Only</span> <span class="kt">Integer</span><span class="p">])</span>
+  <span class="n">close</span> <span class="n">conn</span>
+  <span class="n">print</span> <span class="n">c</span>
+
+</code></pre></div></div>
+
+<p>We’re going to change our directory structure to look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>├── Adapter
+│   ├── PG
+│   │   └── Main.hs
+│   └── Scotty
+│       └── Main.hs
+├── Domain
+│   ├── Types
+│   │   ├── CommonJSON.hs
+│   │   ├── Name.hs
+│   │   └── UserSignup.hs
+│   └── User
+│       ├── PG.hs
+│       └── Service.hs
+└── Lib.hs
+</code></pre></div></div>
+
+<p>There will be very little change to our code I’ll go through any major changes and explain it but you’ve already seen everything in here.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">LoadEnv</span> <span class="k">as</span> <span class="n">LE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Adapter.Scotty.Main</span> <span class="k">as</span> <span class="n">Server</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Adapter.PG.Main</span> <span class="k">as</span> <span class="n">DB</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="kt">LE</span><span class="o">.</span><span class="n">loadEnvFrom</span> <span class="s">"./.env"</span>
+  <span class="n">pool</span> <span class="o">&lt;-</span> <span class="kt">DB</span><span class="o">.</span><span class="n">initDB</span>
+  <span class="kt">Server</span><span class="o">.</span><span class="n">main</span> <span class="n">pool</span>
+</code></pre></div></div>
+
+<p><em>src/Adapter/PG/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Adapter.PG.Main</span>
+  <span class="p">(</span> <span class="nf">initDB</span>
+  <span class="p">,</span> <span class="nf">showConnectCount</span>
+  <span class="p">,</span> <span class="nf">withPool</span>
+  <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">System.Environment</span> <span class="k">as</span> <span class="n">SE</span>
+<span class="kr">import</span>           <span class="nn">Data.Word</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.Migration</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+<span class="kr">import</span>           <span class="nn">Control.Exception</span>
+
+<span class="n">getConnectInfo</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">ConnectInfo</span>
+<span class="n">getConnectInfo</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">host</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_HOST"</span> 
+  <span class="n">port</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PORT"</span>
+  <span class="n">user</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_USER"</span>
+  <span class="n">db</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_DATABASE"</span>
+  <span class="n">pass</span> <span class="o">&lt;-</span> <span class="kt">SE</span><span class="o">.</span><span class="n">getEnv</span> <span class="s">"PG_CONNECT_PASSWORD"</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="kt">ConnectInfo</span> <span class="n">host</span> <span class="p">(</span><span class="n">read</span> <span class="n">port</span> <span class="o">::</span> <span class="kt">Word16</span><span class="p">)</span> <span class="n">user</span> <span class="n">pass</span> <span class="n">db</span>
+
+<span class="n">getConn</span> <span class="o">::</span> <span class="kt">IO</span> <span class="kt">Connection</span>
+<span class="n">getConn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">connect</span> <span class="n">cInfo</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">conn</span>
+
+<span class="n">getPool</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+<span class="n">getPool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">cInfo</span> <span class="o">&lt;-</span> <span class="n">getConnectInfo</span>
+  <span class="n">createPool</span> <span class="p">(</span><span class="n">connect</span> <span class="n">cInfo</span><span class="p">)</span> <span class="n">close</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">5</span>
+
+<span class="n">migrateDB</span> <span class="o">::</span> <span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">migrateDB</span> <span class="n">conn</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">res</span> <span class="o">&lt;-</span> <span class="n">withTransaction</span> <span class="n">conn</span> <span class="p">(</span><span class="n">runMigrations</span> <span class="kt">False</span> <span class="n">conn</span> <span class="p">[</span><span class="kt">MigrationInitialization</span><span class="p">,</span> <span class="kt">MigrationDirectory</span> <span class="s">"./migrations"</span><span class="p">])</span>
+  <span class="n">print</span> <span class="n">res</span>
+
+<span class="n">withPool</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Connection</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">SqlError</span> <span class="n">a</span><span class="p">)</span>
+<span class="n">withPool</span> <span class="n">pool</span> <span class="n">action</span> <span class="o">=</span> <span class="n">try</span> <span class="p">(</span><span class="n">withResource</span> <span class="n">pool</span> <span class="n">action</span><span class="p">)</span>
+
+<span class="n">initDB</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span>
+<span class="n">initDB</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">pool</span> <span class="o">&lt;-</span> <span class="n">getPool</span>
+  <span class="n">withPool</span> <span class="n">pool</span> <span class="n">migrateDB</span>
+  <span class="n">return</span> <span class="o">$</span> <span class="n">pool</span>
+
+<span class="n">showConnectCount</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">showConnectCount</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">conn</span> <span class="o">&lt;-</span> <span class="n">getConn</span>
+  <span class="n">x</span> <span class="o">&lt;-</span> <span class="n">query_</span> <span class="n">conn</span> <span class="s">"SELECT COUNT (*) FROM pg_stat_activity"</span>
+  <span class="kr">let</span> <span class="n">c</span> <span class="o">=</span> <span class="n">fromOnly</span> <span class="o">.</span> <span class="n">head</span> <span class="o">$</span> <span class="p">(</span><span class="n">x</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Only</span> <span class="kt">Integer</span><span class="p">])</span>
+  <span class="n">close</span> <span class="n">conn</span>
+  <span class="n">print</span> <span class="n">c</span>
+
+</code></pre></div></div>
+
+<p><em>src/Adapter/Scotty/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Adapter.Scotty.Main</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Domain.User.Service</span> <span class="k">as</span> <span class="n">UserService</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">server</span> <span class="n">pool</span>
+
+<span class="n">server</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">server</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kt">UserService</span><span class="o">.</span><span class="n">signupUser</span> <span class="n">pool</span>
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p><em>src/Domain/Types/CommonJSON.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.CommonJSON</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span>
+
+<span class="kr">data</span> <span class="kt">JSONError</span> <span class="o">=</span> <span class="kt">JSONError</span> <span class="p">{</span> <span class="n">message</span> <span class="o">::</span> <span class="kt">String</span> <span class="p">}</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">JSONError</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">je</span> <span class="o">=</span> <span class="n">object</span> <span class="p">[</span><span class="s">"message"</span> <span class="o">.=</span> <span class="n">message</span> <span class="n">je</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p><em>src/Domain/Types/Name.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.Name</span> 
+ <span class="p">(</span> <span class="nf">mkName</span>
+ <span class="p">,</span> <span class="kt">Name</span><span class="p">(</span><span class="o">..</span><span class="p">)</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson.Types</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToField</span>
+
+
+<span class="n">mkName</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Name</span>
+<span class="n">mkName</span> <span class="n">fName</span> <span class="n">lName</span> <span class="o">=</span> <span class="kt">Name</span> <span class="o">&lt;$&gt;</span> <span class="n">fstName</span> <span class="o">&lt;*&gt;</span> <span class="n">lstName</span> 
+ <span class="kr">where</span> <span class="n">fstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">fName</span>
+       <span class="n">lstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">lName</span>
+
+<span class="n">nameFieldTester</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">NameField</span>
+<span class="n">nameFieldTester</span> <span class="n">field</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="n">otherwise</span>           <span class="o">=</span> <span class="kt">Right</span> <span class="n">field</span>
+ <span class="kr">where</span> <span class="n">nameError</span> <span class="o">=</span> <span class="s">"Name Fields must be less than 50 characters and Greater than 0 characters"</span>
+
+<span class="kr">type</span> <span class="kt">Email</span>     <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">Password</span>  <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">NameField</span> <span class="o">=</span> <span class="kt">Text</span>
+
+<span class="kr">data</span> <span class="kt">Name</span> <span class="o">=</span> <span class="kt">Name</span>
+  <span class="p">{</span> <span class="n">firstname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">,</span> <span class="n">lastname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span>
+   <span class="kt">Name</span> <span class="o">&lt;$&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"firstname"</span>  <span class="o">&lt;*&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"lastname"</span>
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to have a name of type object"</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">name</span> <span class="o">=</span> <span class="n">object</span> 
+   <span class="p">[</span> <span class="s">"firstname"</span> <span class="o">.=</span> <span class="n">firstname</span> <span class="n">name</span>
+   <span class="p">,</span> <span class="s">"lastname"</span> <span class="o">.=</span> <span class="n">lastname</span> <span class="n">name</span>
+   <span class="p">]</span>
+
+<span class="kr">instance</span> <span class="kt">ToField</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">toField</span> <span class="n">a</span> <span class="o">=</span> <span class="n">toJSONField</span> <span class="n">a</span>
+</code></pre></div></div>
+
+<p><em>src/Domain/Types/UserSignup.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.UserSignup</span> 
+ <span class="p">(</span> <span class="nf">mkUserSignup</span>
+ <span class="p">,</span> <span class="kt">UserSignup</span>
+ <span class="p">,</span> <span class="kt">Email</span>
+ <span class="p">,</span> <span class="kt">Password</span>
+ <span class="p">)</span><span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson.Types</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToRow</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToField</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.Name</span>
+
+<span class="n">mkUserSignup</span> <span class="o">::</span> <span class="kt">Name</span> <span class="o">-&gt;</span> <span class="kt">Email</span> <span class="o">-&gt;</span> <span class="kt">Password</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">UserSignup</span>
+<span class="n">mkUserSignup</span> <span class="n">na</span> <span class="n">em</span> <span class="n">pass</span> <span class="o">=</span> <span class="kt">UserSignup</span> <span class="o">&lt;$&gt;</span> <span class="n">mkName</span> <span class="p">(</span><span class="n">firstname</span> <span class="n">na</span><span class="p">)</span> <span class="p">(</span><span class="n">lastname</span> <span class="n">na</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">validateEmail</span> <span class="n">em</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">passwordValidation</span> <span class="n">pass</span><span class="p">)</span>  
+
+<span class="n">passwordValidation</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Password</span>
+<span class="n">passwordValidation</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">8</span>  <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="p">(</span><span class="n">passwordStrength</span> <span class="n">a</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Right</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="kr">where</span> <span class="n">passwordErrorMessage</span> <span class="o">=</span> <span class="s">"Passwords Must be greater than 8 Characters and less than 20 and have at least 1 uppercase letter and 1 special or numeric character"</span>
+
+<span class="n">passwordStrength</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">passwordStrength</span> <span class="n">a</span> <span class="n">lowercases</span> <span class="n">uppercases</span> <span class="n">specialcases</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span>                   <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kr">if</span> <span class="p">((</span><span class="n">lowercases</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="kr">then</span> <span class="p">(</span><span class="kt">True</span><span class="p">)</span> <span class="kr">else</span> <span class="p">(</span><span class="kt">False</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">lowerCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span> 
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">upperCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">specialCases</span> <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">True</span>
+ <span class="kr">where</span> <span class="n">lowerCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'a'</span><span class="o">..</span><span class="sc">'z'</span><span class="p">]</span>
+       <span class="n">upperCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'A'</span><span class="o">..</span><span class="sc">'Z'</span><span class="p">]</span>
+       <span class="n">specialCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span> <span class="sc">'4'</span><span class="p">,</span> <span class="sc">'5'</span><span class="p">,</span> <span class="sc">'6'</span><span class="p">,</span> <span class="sc">'7'</span><span class="p">,</span> <span class="sc">'8'</span><span class="p">,</span> <span class="sc">'9'</span><span class="p">,</span> <span class="sc">'!'</span><span class="p">,</span> <span class="sc">'@'</span><span class="p">,</span> <span class="sc">'#'</span><span class="p">,</span> <span class="sc">'$'</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'^'</span><span class="p">,</span> <span class="sc">'&amp;'</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'?'</span><span class="p">]</span>
+ 
+<span class="n">validateEmail</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Email</span>
+<span class="n">validateEmail</span> <span class="n">candidate</span> <span class="o">=</span> 
+ <span class="kr">case</span> <span class="n">isEmail</span> <span class="kr">of</span>
+  <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kt">Left</span> <span class="p">(</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+  <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kt">Right</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">decodeUtf8</span> <span class="o">$</span> <span class="kt">EV</span><span class="o">.</span><span class="n">toByteString</span> <span class="n">s</span><span class="p">)</span>
+ <span class="kr">where</span> <span class="n">isEmail</span> <span class="o">=</span> <span class="kt">EV</span><span class="o">.</span><span class="n">validate</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">encodeUtf8</span> <span class="n">candidate</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="kt">Email</span>     <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">Password</span>  <span class="o">=</span> <span class="kt">Text</span>
+
+
+<span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Email</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Password</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="kr">do</span>
+   <span class="n">n</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"name"</span>
+   <span class="n">e</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"email"</span>
+   <span class="n">p</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"password"</span>
+   <span class="kr">case</span> <span class="p">(</span><span class="n">mkUserSignup</span> <span class="n">n</span> <span class="n">e</span> <span class="n">p</span><span class="p">)</span> <span class="kr">of</span>
+     <span class="kt">Left</span> <span class="n">er</span> <span class="o">-&gt;</span> <span class="n">fail</span> <span class="o">$</span> <span class="p">(</span><span class="n">unpack</span> <span class="n">er</span><span class="p">)</span>
+     <span class="kt">Right</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="n">r</span> 
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to be an object"</span>
+
+<span class="kr">instance</span> <span class="kt">ToRow</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">toRow</span> <span class="n">user</span> <span class="o">=</span> <span class="p">[</span><span class="n">toField</span> <span class="p">(</span><span class="n">email</span> <span class="n">user</span><span class="p">),</span> <span class="n">toField</span> <span class="p">(</span><span class="n">password</span> <span class="n">user</span><span class="p">),</span> <span class="n">toField</span> <span class="p">(</span><span class="n">name</span> <span class="n">user</span><span class="p">)]</span>
+
+</code></pre></div></div>
+
+<p><em>src/Domain/User/PG.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.User.PG</span> 
+ <span class="p">(</span> <span class="nf">addUserToDB</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Adapter.PG.Main</span> <span class="k">as</span> <span class="n">PG</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+<span class="kr">import</span>           <span class="nn">Data.Int</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.UserSignup</span>
+
+<span class="n">addUserToDB</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UserSignup</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">String</span> <span class="kt">Int64</span><span class="p">)</span>
+<span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">usr</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">val</span> <span class="o">&lt;-</span> <span class="kt">PG</span><span class="o">.</span><span class="n">withPool</span> <span class="n">pool</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="n">execute</span> <span class="n">c</span> <span class="n">statement</span> <span class="n">usr</span><span class="p">)</span>
+  <span class="kr">case</span> <span class="n">val</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">sqlState</span> <span class="n">e</span><span class="p">)</span> <span class="kr">of</span>
+      <span class="p">(</span><span class="s">"23505"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="s">"That email is already taken please try signing up with a different email."</span>
+      <span class="kr">_</span>         <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="o">$</span> <span class="s">"Unexpected Server Error. Please try again later."</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Right</span> <span class="n">s</span> 
+  <span class="kr">where</span> <span class="n">statement</span> <span class="o">=</span> <span class="s">"INSERT INTO users (email, password, name) VALUES (?, crypt(?, gen_salt('bf', 8)), ?)"</span>
+</code></pre></div></div>
+
+<p><em>src/Domain/User/Service.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.User.Service</span> 
+ <span class="p">(</span> <span class="nf">signupUser</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Domain.User.PG</span> <span class="k">as</span> <span class="n">PG</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.UserSignup</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.CommonJSON</span>
+
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Network.HTTP.Types.Status</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Data.Pool</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+
+<span class="n">signupUser</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ActionM</span> <span class="nb">()</span>
+<span class="n">signupUser</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+  <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+  <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">status</span> <span class="n">status400</span>
+    <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">uId</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="kt">PG</span><span class="o">.</span><span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">s</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">uId</span><span class="p">)</span> <span class="kr">of</span> 
+     <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+      <span class="n">status</span> <span class="n">status400</span>
+      <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+     <span class="kt">Right</span> <span class="n">uid</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="o">$</span> <span class="kt">TL</span><span class="o">.</span><span class="n">pack</span> <span class="p">(</span><span class="n">show</span> <span class="n">uid</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This file contains the major change we can see that there is the introduction of the ActionM () monad. Where is this monad used? Let’s look at the <code class="highlighter-rouge">scotty</code> docs. We can see that the routing function in <code class="highlighter-rouge">scotty</code> have the following type signature: <code class="highlighter-rouge">get :: RoutePattern -&gt; ActionM () -&gt; ScottyM ()</code> and if we look at the response handlers like <code class="highlighter-rouge">json</code> we see they have the following type signature: <code class="highlighter-rouge">json :: ToJSON a =&gt; a -&gt; ActionM ()</code>. That’s the only major change we can see here. Later on we will refactor this so that the service doesn’t have any scotty functions in it so that our domain is less tightly coupled to our adapter. This is a good design decision as the creation of a user should have no relevance to routing which is what <code class="highlighter-rouge">scotty</code> should take care of.</p>
+
+<p>Now let’s make sure that instead of sending back a text response on success we send back a json response. Let’s return back the user’s information. Let’s make a type that contains the information that we want to send back to our user. The</p>
+
+<p><em>src/Domain/Types/UserSignup.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.UserSignup</span> 
+ <span class="p">(</span> <span class="nf">mkUserSignup</span>
+ <span class="p">,</span> <span class="kt">UserSignup</span>
+ <span class="p">,</span> <span class="kt">Email</span>
+ <span class="p">,</span> <span class="kt">Password</span>
+ <span class="p">,</span> <span class="kt">SuccessfulSignup</span><span class="p">(</span><span class="o">..</span><span class="p">)</span>
+ <span class="p">)</span><span class="kr">where</span>
+
+<span class="o">...</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Int</span>
+
+<span class="o">...</span>
+
+<span class="kr">newtype</span> <span class="kt">SuccessfulSignup</span> <span class="o">=</span> <span class="kt">SuccessfulSignup</span> <span class="p">{</span> <span class="n">uId</span> <span class="o">::</span> <span class="kt">Int</span> <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span> 
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">SuccessfulSignup</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">ss</span> <span class="o">=</span> <span class="n">object</span> 
+   <span class="p">[</span> <span class="s">"user_id"</span> <span class="o">.=</span> <span class="n">uId</span> <span class="n">ss</span>
+   <span class="p">]</span>
+</code></pre></div></div>
+
+<p><em>src/Domain/User/Service.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">signupUser</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ActionM</span> <span class="nb">()</span>
+<span class="n">signupUser</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+  <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+  <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">status</span> <span class="n">status400</span>
+    <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="n">uId</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="kt">PG</span><span class="o">.</span><span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">s</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">uId</span><span class="p">)</span> <span class="kr">of</span> 
+     <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+      <span class="n">status</span> <span class="n">status400</span>
+      <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+     <span class="kt">Right</span> <span class="n">uid</span> <span class="o">-&gt;</span> <span class="n">json</span> <span class="o">$</span> <span class="kt">SuccessfulSignup</span> <span class="n">uid</span>
+</code></pre></div></div>
+
+<p>and lets change our Database Access function to the following:</p>
+
+<p><em>src/Domain/User/PG.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">addUserToDB</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UserSignup</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">String</span> <span class="kt">Int64</span><span class="p">)</span>
+<span class="n">addUserToDB</span> <span class="n">pool</span> <span class="n">usr</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">val</span> <span class="o">&lt;-</span> <span class="kt">PG</span><span class="o">.</span><span class="n">withPool</span> <span class="n">pool</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="n">query</span> <span class="n">c</span> <span class="n">statement</span> <span class="n">usr</span><span class="p">)</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">SqlError</span> <span class="p">[</span><span class="kt">Only</span> <span class="kt">Int64</span><span class="p">])</span>
+  <span class="kr">case</span> <span class="n">val</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">sqlState</span> <span class="n">e</span><span class="p">)</span> <span class="kr">of</span>
+      <span class="p">(</span><span class="s">"23505"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="s">"That email is already taken please try signing up with a different email."</span>
+      <span class="kr">_</span>         <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="o">$</span> <span class="s">"Unexpected Server Error. Please try again later."</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">length</span> <span class="n">s</span><span class="p">)</span> <span class="kr">of</span>
+     <span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Right</span> <span class="o">$</span> <span class="n">fromOnly</span> <span class="o">$</span> <span class="n">head</span> <span class="n">s</span> 
+     <span class="kr">_</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="o">$</span> <span class="s">"Unexpected Server Error. Please try again later."</span>
+  <span class="kr">where</span> <span class="n">statement</span> <span class="o">=</span> <span class="s">"INSERT INTO users (email, password, name) </span><span class="se">\
+                    \</span><span class="s">VALUES (?, crypt(?, gen_salt('bf', 8)), ?) </span><span class="se">\ 
+                    \</span><span class="s">RETURNING user_id"</span>
+</code></pre></div></div>
+
+<p>Now we can fire up our server and try that out with a new email and we have just what we wanted.</p>
+
+<p>Ok now that we have the ability to add user’s let’s give ourselves the ability to see our user’s data. Let’s first write the datatype:</p>
+
+<p><em>src/Domain/Types/User.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.Types.User</span>
+ <span class="p">(</span> <span class="kt">User</span><span class="p">(</span><span class="o">..</span><span class="p">)</span>
+ <span class="p">,</span> <span class="kt">UserWrapper</span><span class="p">(</span><span class="o">..</span><span class="p">)</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToRow</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.FromRow</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.ToField</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.Time</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.Name</span>
+<span class="kr">import</span>           <span class="nn">Data.Int</span>
+<span class="kr">import</span>           <span class="nn">Data.Time</span>
+
+<span class="kr">newtype</span> <span class="kt">UserWrapper</span> <span class="o">=</span> <span class="kt">UserWrapper</span> <span class="p">{</span> <span class="n">user</span> <span class="o">::</span> <span class="kt">User</span> <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">UserWrapper</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">u</span> <span class="o">=</span> <span class="n">object</span> 
+   <span class="p">[</span> <span class="s">"user"</span> <span class="o">.=</span> <span class="n">u</span>
+   <span class="p">]</span>
+
+<span class="kr">data</span> <span class="kt">User</span> <span class="o">=</span> <span class="kt">User</span> 
+  <span class="p">{</span> <span class="n">user_id</span> <span class="o">::</span> <span class="kt">Int64</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">image</span> <span class="o">::</span> <span class="kt">Maybe</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">about_me</span> <span class="o">::</span> <span class="kt">Maybe</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">created_at</span> <span class="o">::</span> <span class="kt">UTCTime</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">User</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">u</span> <span class="o">=</span> <span class="n">object</span> 
+   <span class="p">[</span> <span class="s">"user_id"</span> <span class="o">.=</span> <span class="n">user_id</span> <span class="n">u</span>
+   <span class="p">,</span> <span class="s">"email"</span> <span class="o">.=</span> <span class="n">email</span> <span class="n">u</span>
+   <span class="p">,</span> <span class="s">"name"</span> <span class="o">.=</span> <span class="n">name</span> <span class="n">u</span>
+   <span class="p">,</span> <span class="s">"image"</span> <span class="o">.=</span> <span class="n">image</span> <span class="n">u</span>
+   <span class="p">,</span> <span class="s">"about_me"</span> <span class="o">.=</span> <span class="n">about_me</span> <span class="n">u</span>
+   <span class="p">,</span> <span class="s">"created_at"</span> <span class="o">.=</span> <span class="n">created_at</span> <span class="n">u</span>
+   <span class="p">]</span>
+
+<span class="kr">instance</span> <span class="kt">FromRow</span> <span class="kt">User</span> <span class="kr">where</span>
+  <span class="n">fromRow</span> <span class="o">=</span> <span class="kt">User</span> <span class="o">&lt;$&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span>
+</code></pre></div></div>
+<p><em>Using show as the means of converting UTCTimestamp probably isnt a great idea but let’s just go ahead and use it</em></p>
+
+<p>Compiling that code should give us the following error:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="err">•</span> <span class="kt">No</span> <span class="kr">instance</span> <span class="n">for</span> <span class="p">(</span><span class="kt">Database</span><span class="o">.</span><span class="kt">PostgreSQL</span><span class="o">.</span><span class="kt">Simple</span><span class="o">.</span><span class="kt">FromField</span><span class="o">.</span><span class="kt">FromField</span>
+                         <span class="kt">Name</span><span class="p">)</span>
+        <span class="n">arising</span> <span class="n">from</span> <span class="n">a</span> <span class="n">use</span> <span class="kr">of</span> <span class="err">‘</span><span class="n">field</span><span class="err">’</span>
+    <span class="err">•</span> <span class="kt">In</span> <span class="n">the</span> <span class="n">second</span> <span class="n">argument</span> <span class="kr">of</span> <span class="err">‘</span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="err">’</span><span class="p">,</span> <span class="n">namely</span> <span class="err">‘</span><span class="n">field</span><span class="err">’</span>
+      <span class="kt">In</span> <span class="n">the</span> <span class="n">first</span> <span class="n">argument</span> <span class="kr">of</span> <span class="err">‘</span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="err">’</span><span class="p">,</span> <span class="n">namely</span>
+        <span class="err">‘</span><span class="kt">User</span> <span class="o">&lt;$&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span><span class="err">’</span>
+      <span class="kt">In</span> <span class="n">the</span> <span class="n">first</span> <span class="n">argument</span> <span class="kr">of</span> <span class="err">‘</span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="err">’</span><span class="p">,</span> <span class="n">namely</span>
+        <span class="err">‘</span><span class="kt">User</span> <span class="o">&lt;$&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span><span class="err">’</span>
+   <span class="o">|</span>
+<span class="mi">35</span> <span class="o">|</span>   <span class="n">fromRow</span> <span class="o">=</span> <span class="kt">User</span> <span class="o">&lt;$&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span> <span class="o">&lt;*&gt;</span> <span class="n">field</span>
+</code></pre></div></div>
+
+<p>And GHC tells us exactly what’s wrong there’s no FromField instance for Name since it can have some arbitrary JSON structure. Let’s add the following to our file:</p>
+
+<p><em>src/Domain/Types/Name.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+<span class="kr">import</span>           <span class="nn">Database.PostgreSQL.Simple.FromField</span>
+
+<span class="o">...</span>
+<span class="kr">instance</span> <span class="kt">FromField</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">fromField</span> <span class="n">a</span> <span class="o">=</span> <span class="n">fromJSONField</span> <span class="n">a</span>
+</code></pre></div></div>
+
+<p>Now let’s write a database function that will give us access to our data.</p>
+
+<p><em>src/Domain/User/PG.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.User.PG</span> 
+ <span class="p">(</span> <span class="nf">addUserToDB</span>
+ <span class="p">,</span> <span class="nf">getUserByID</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="o">...</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.User</span>
+<span class="o">...</span>
+
+<span class="n">getUserByID</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Integer</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">String</span> <span class="kt">User</span><span class="p">)</span>
+<span class="n">getUserByID</span> <span class="n">pool</span> <span class="n">uId</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">val</span> <span class="o">&lt;-</span> <span class="kt">PG</span><span class="o">.</span><span class="n">withPool</span> <span class="n">pool</span> <span class="p">(</span><span class="nf">\</span><span class="n">c</span> <span class="o">-&gt;</span> <span class="n">query</span> <span class="n">c</span> <span class="n">statement</span> <span class="p">(</span><span class="kt">Only</span> <span class="n">uId</span><span class="p">))</span> <span class="o">::</span> <span class="kt">IO</span> <span class="p">(</span><span class="kt">Either</span> <span class="kt">SqlError</span> <span class="p">[</span><span class="kt">User</span><span class="p">])</span>
+  <span class="kr">case</span> <span class="n">val</span> <span class="kr">of</span>
+   <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="o">$</span> <span class="s">"Unexpected Server Error. Please try again later."</span>
+   <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+    <span class="kr">case</span> <span class="p">(</span><span class="n">length</span> <span class="n">s</span><span class="p">)</span> <span class="kr">of</span>
+     <span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Right</span> <span class="o">$</span> <span class="n">head</span> <span class="n">s</span> 
+     <span class="kr">_</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Left</span> <span class="o">$</span> <span class="s">"That user does not exist."</span>
+  <span class="kr">where</span> <span class="n">statement</span> <span class="o">=</span> <span class="s">"SELECT user_id, CAST (email as TEXT), name, image, about_me, created_at FROM users WHERE user_id = ?"</span>
+</code></pre></div></div>
+
+<p>Now let’s add a service to glue the routing and database access together:</p>
+
+<p><em>src/Domain/User/Service.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Domain.User.Service</span> 
+ <span class="p">(</span> <span class="nf">signupUser</span>
+ <span class="p">,</span> <span class="nf">getUser</span>
+ <span class="p">)</span> <span class="kr">where</span>
+
+<span class="o">...</span>
+<span class="kr">import</span>           <span class="nn">Domain.Types.User</span>
+<span class="o">...</span>
+
+<span class="n">getUser</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ActionM</span> <span class="nb">()</span>
+<span class="n">getUser</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">uId</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="kt">Just</span> <span class="o">&lt;$&gt;</span> <span class="p">(</span><span class="n">param</span> <span class="s">"user_id"</span><span class="o">::</span> <span class="kt">ActionM</span> <span class="kt">Integer</span><span class="p">))</span> <span class="p">`</span><span class="n">rescue</span><span class="p">`</span> <span class="p">(</span><span class="nf">\</span><span class="n">msg</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="o">$</span> <span class="kt">Nothing</span><span class="p">)</span>
+  <span class="kr">case</span> <span class="n">uId</span> <span class="kr">of</span>
+    <span class="kt">Nothing</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+     <span class="n">status</span> <span class="n">status400</span>
+     <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="s">"No Integer supplied in user_id paramter of url"</span>
+    <span class="kt">Just</span> <span class="n">i</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+     <span class="n">usr</span> <span class="o">&lt;-</span> <span class="n">liftAndCatchIO</span> <span class="o">$</span> <span class="kt">PG</span><span class="o">.</span><span class="n">getUserByID</span> <span class="n">pool</span> <span class="n">i</span> 
+     <span class="kr">case</span> <span class="n">usr</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+       <span class="n">status</span> <span class="n">status400</span>
+       <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+       <span class="n">json</span> <span class="o">$</span> <span class="kt">UserWrapper</span> <span class="n">s</span>
+</code></pre></div></div>
+
+<p>And finally we wire up our route:</p>
+
+<p><em>src/Adapter/Scotty/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pool</span> <span class="kt">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">server</span> <span class="n">pool</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kt">UserService</span><span class="o">.</span><span class="n">signupUser</span> <span class="n">pool</span>
+   <span class="n">get</span> <span class="s">"/user/:user_id"</span> <span class="o">$</span> <span class="kt">UserService</span><span class="o">.</span><span class="n">getUser</span> <span class="n">pool</span>
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Ok let’s give our new function a try and see what we get I made a new user and it’s ID was 17</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner9@ethan.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gardner"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ethan"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"about_me"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-12-23T04:52:35.003301Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">17</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Perfect. How about a user that doesn’t exist (hit a route like localhost:3000/user/2000):</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"That user does not exist."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>And lastly what if we send something that isn’t an int:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span>404: File Not Found!<span class="nt">&lt;/h1&gt;</span>
+</code></pre></div></div>
+
+<p>This is because if the <code class="highlighter-rouge">read</code> function fails scotty automatiaclly calls <code class="highlighter-rouge">next</code> which allows the server to try and find another handler that matches in our case we don’t have one so we rightfully return a <code class="highlighter-rouge">404</code>.</p>
+
+<p>Ok now we can see our users data. But the problem is so can everyone! In the next post we’ll add authentication via JWT’s to our app.</p>
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=Scotty Tutorial Part 2&url=https://www.codewandering.com/scotty-tutorial-part-2/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=https://www.codewandering.com/scotty-tutorial-part-2/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=https://www.codewandering.com/scotty-tutorial-part-2/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+            <a href="/tags#Scotty" class="tag">&#35; Scotty</a>
+          
+            <a href="/tags#Haskell" class="tag">&#35; Haskell</a>
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+    <div id="disqus_thread" class="article-comments"></div>
+    <script>
+      (function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//ethanmgardner.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-155315616-1', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>

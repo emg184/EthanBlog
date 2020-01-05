@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Scotty Tutorial Outline and Goals - Ethan Gardners Software Blog</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Ethan Gardners Software Blog" property="og:site_name">
+  
+    <meta content="Scotty Tutorial Outline and Goals" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="Design intent for the tutorial and the application we are building." property="og:description">
+  
+  
+    <meta content="https://www.codewandering.com/scotty-tutorial-outline-and-goals/" property="og:url">
+  
+  
+    <meta content="2020-01-01T00:00:00-05:00" property="article:published_time">
+    <meta content="https://www.codewandering.com/about/" property="article:author">
+  
+  
+    <meta content="https://www.codewandering.com/assets/img/Haskell.png" property="og:image">
+  
+  
+    
+  
+  
+    
+    <meta content="Scotty" property="article:tag">
+    
+    <meta content="Haskell" property="article:tag">
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@">
+  
+    <meta name="twitter:title" content="Scotty Tutorial Outline and Goals">
+  
+  
+    <meta name="twitter:url" content="https://www.codewandering.com/scotty-tutorial-outline-and-goals/">
+  
+  
+    <meta name="twitter:description" content="Design intent for the tutorial and the application we are building.">
+  
+  
+    <meta name="twitter:image:src" content="https://www.codewandering.com/assets/img/Haskell.png">
+  
+
+	<meta name="description" content="Design intent for the tutorial and the application we are building.">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-touch-icon-144x144.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/ethan-hammock.jpg" alt="Ethan Gardner"></a>
+      </div>
+      <div class="author-name">Ethan Gardner</div>
+      <p>I am some sort of engineer.</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <li><a href="" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+        
+        
+          <li><a href="https://facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+        
+        
+          <li class="github"><a href="http://github.com/https://github.com/emg184" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/https://www.linkedin.com/in/ethan-gardner-06261988/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href=""><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
+        
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2020 &copy; Ethan Gardner</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src=/assets/img/Haskell.png alt="Scotty Tutorial Outline and Goals">
+        
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">Scotty Tutorial Outline and Goals</h1>
+        <div class="page-date"><span>2020, Jan 01&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      <p>I started learning Haskell like many others did with <a href="http://learnyouahaskell.com/">Learn You a Haskell</a> and I quickly went over to <a href="https://haskellbook.com/">The Haskell Book</a>. I think the Haskell book is one fo the best software books I’ve ever read (I was only able to make to Chapter 24, didn’t have the mental fortitude to keep reading I was antsy to do something). After the haskell book while i thought I had a good understanding of haskell I found that there was a lack of intermediate level resources for wannabe Haskellers. I was looking to use haskell for web development but the vast majority of resources I found were in two categories <strong><em>Trivial how to setup “x” and not much else</em></strong> or <strong><em>Here is a fully working example of a server on GitHub utiilizing Monad Transformers, Dependent Types, etc</em></strong> there was nothing that showed how you could start simple and then gradually reach for more complex abstractions as the applications needs changed. I’m not saying this to knock any of the writers of these resources this was just a personal observation.</p>
+
+<p>Luckily I’ve been able to piece together pieces of the information that I’ve found and was able to better my understanding of Application Design with Haskell. So I’ve decided to try to make a tutorial that I would’ve liked to have been able to read in the past. Now I definitely wouldn’t consider myself to be a haskell expert and I don’t think I ever will be so if you see something wrong please let me know and I will make an effort to fix it. I intend for this to be a WIP and will update resources as I see fit. Hopefully I am able to provide someone that is learning Haskell with some information. I would also appreciate critiques to my writing style as well. Ok let’s get on to what we will actually be building, the libraries we will use and the structure of the project.</p>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+  <li>SendGrid</li>
+  <li>AWS S3</li>
+  <li>PostgreSQL</li>
+  <li>Redis</li>
+  <li>JWT</li>
+  <li>OAuth2</li>
+  <li>Haddock</li>
+  <li>Swagger</li>
+</ul>
+
+<p><strong>Notable Libraries:</strong></p>
+<ul>
+  <li>scotty</li>
+  <li>postgresql-simple</li>
+  <li>postgresql-simple-migration</li>
+  <li>amazonka</li>
+  <li>sendgrid-v3</li>
+  <li>jose</li>
+  <li>hedis</li>
+  <li>wreq</li>
+  <li>fast-logger</li>
+</ul>
+
+<p>What I will try to do is start simple and gradually add complexity to the application. We will try to design this with as few language extensions as possible. I would like to start off with a more verbose way of introducing topics and towards later parts of the tutorial introduce topics with less prose and more code.</p>
+
+<p>Our Project will take on a Port Adapter style architecture also referred to as hexagonal architecture or core shell architecture. My plan is to structure the tutorial in the following fashion.</p>
+
+<p><strong>Project Structure:</strong></p>
+<ul>
+  <li>Part 1: JSON Validation and web server setup</li>
+  <li>Part 2: Adding state to the application with PostgreSQL</li>
+  <li>Part 3: Adding Authentication to the application via JWT security (Maybe Session)</li>
+  <li>Part 4: Adding Testing to the application.</li>
+  <li>Part 5: Adding Logging to the Application</li>
+  <li>Part 6: Adding Email Verification with SendGrid.</li>
+  <li>Part 7: Creating Better Error with Applicative JSON validation.</li>
+  <li>Part 8: Adding Image Upload with AWS S3 and amazonka.</li>
+  <li>Part 9: Refactoring our application to a Monad Transformer Stack utilizing the ReaderT design pattern</li>
+  <li>Part 10: Adding OAuth to our application</li>
+  <li>Part 11: Adding Caching to our application</li>
+  <li>Part 12: Deployment</li>
+</ul>
+
+<p>This is my first try at writing a tutorial so bear with me as I get better at it and please provide whatever criticism you think would increase the quality of the tutorial.</p>
+
+<p>The site will be built using stack to ease development. I assume you have stack installed in the first part of the tutorial.</p>
+
+<p>With that being said head over to <a href="/scotty-tutorial-part-1/">(Part 1)</a></p>
+
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=Scotty Tutorial Outline and Goals&url=https://www.codewandering.com/scotty-tutorial-outline-and-goals/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=https://www.codewandering.com/scotty-tutorial-outline-and-goals/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=https://www.codewandering.com/scotty-tutorial-outline-and-goals/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+            <a href="/tags#Scotty" class="tag">&#35; Scotty</a>
+          
+            <a href="/tags#Haskell" class="tag">&#35; Haskell</a>
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+    <div id="disqus_thread" class="article-comments"></div>
+    <script>
+      (function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//ethanmgardner.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-155315616-1', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>

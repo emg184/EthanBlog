@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Scotty Tutorial Part 1 - Ethan Gardners Software Blog</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Ethan Gardners Software Blog" property="og:site_name">
+  
+    <meta content="Scotty Tutorial Part 1" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="Basic Server Setup and JSON validation." property="og:description">
+  
+  
+    <meta content="https://www.codewandering.com/scotty-tutorial-part-1/" property="og:url">
+  
+  
+    <meta content="2020-01-02T00:00:00-05:00" property="article:published_time">
+    <meta content="https://www.codewandering.com/about/" property="article:author">
+  
+  
+    <meta content="https://www.codewandering.com/assets/img/Haskell.png" property="og:image">
+  
+  
+    
+  
+  
+    
+    <meta content="Scotty" property="article:tag">
+    
+    <meta content="Haskell" property="article:tag">
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@">
+  
+    <meta name="twitter:title" content="Scotty Tutorial Part 1">
+  
+  
+    <meta name="twitter:url" content="https://www.codewandering.com/scotty-tutorial-part-1/">
+  
+  
+    <meta name="twitter:description" content="Basic Server Setup and JSON validation.">
+  
+  
+    <meta name="twitter:image:src" content="https://www.codewandering.com/assets/img/Haskell.png">
+  
+
+	<meta name="description" content="Basic Server Setup and JSON validation.">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-touch-icon-144x144.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/ethan-hammock.jpg" alt="Ethan Gardner"></a>
+      </div>
+      <div class="author-name">Ethan Gardner</div>
+      <p>I am some sort of engineer.</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <li><a href="" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+        
+        
+          <li><a href="https://facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+        
+        
+          <li class="github"><a href="http://github.com/https://github.com/emg184" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/https://www.linkedin.com/in/ethan-gardner-06261988/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href=""><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
+        
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2020 &copy; Ethan Gardner</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src=/assets/img/Haskell.png alt="Scotty Tutorial Part 1">
+        
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">Scotty Tutorial Part 1</h1>
+        <div class="page-date"><span>2020, Jan 02&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      <p>Ok lets get started we will start by building a larger haskell application from the ground up and we will first build simply using just explicit paramter passing and as few language extensions as possible for simplicity. In order to get started we will first focus on building out our user signup validation and setting up a basic server. Lets add some packages to our project so that we can really get started you will need to add the following to your package.yaml file.</p>
+
+<p><em>package.yaml</em></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span>                <span class="s">scotty-tutorial</span>
+
+<span class="na">default-extensions</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">OverloadedStrings</span>
+
+<span class="na">dependencies</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">base &gt;= 4.7 &amp;&amp; &lt; </span><span class="m">5</span>
+<span class="pi">-</span> <span class="s">scotty</span>
+<span class="pi">-</span> <span class="s">text</span>
+<span class="pi">-</span> <span class="s">aeson</span>
+<span class="pi">-</span> <span class="s">email-validate</span>
+<span class="pi">-</span> <span class="s">bytestring</span>
+<span class="pi">-</span> <span class="s">containers</span>
+
+
+
+<span class="na">library</span><span class="pi">:</span>
+  <span class="na">source-dirs</span><span class="pi">:</span> <span class="s">src</span>
+
+<span class="na">executables</span><span class="pi">:</span>
+  <span class="na">scotty-tutorial-exe</span><span class="pi">:</span>
+    <span class="na">main</span><span class="pi">:</span>                <span class="s">Main.hs</span>
+    <span class="na">source-dirs</span><span class="pi">:</span>         <span class="s">app</span>
+    <span class="na">ghc-options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">-threaded</span>
+    <span class="pi">-</span> <span class="s">-rtsopts</span>
+    <span class="pi">-</span> <span class="s">-with-rtsopts=-N</span>
+    <span class="na">dependencies</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">scotty-tutorial</span>
+
+<span class="na">tests</span><span class="pi">:</span>
+  <span class="na">scotty-tutorial-test</span><span class="pi">:</span>
+    <span class="na">main</span><span class="pi">:</span>                <span class="s">Spec.hs</span>
+    <span class="na">source-dirs</span><span class="pi">:</span>         <span class="s">test</span>
+    <span class="na">ghc-options</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">-threaded</span>
+    <span class="pi">-</span> <span class="s">-rtsopts</span>
+    <span class="pi">-</span> <span class="s">-with-rtsopts=-N</span>
+    <span class="na">dependencies</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">scotty-tutorial</span>
+
+</code></pre></div></div>
+
+<p>Adding the <code class="highlighter-rouge">OverloadedStrings</code> pragma to the default extensions will make it so that we don’t need to put <code class="highlighter-rouge">{-# LANGUAGE OverloadedStrings #-}</code> at the top of each of our source files. The pragmas in the default extensions will be used on all of our source files.</p>
+
+<p>The <code class="highlighter-rouge">OverloadedStrings</code> extesnsion allows us to have a more polymorphic version of String literals in our application so that we don’t need to explicitly declare <code class="highlighter-rouge">Text</code> as our datatype when writing our strings.</p>
+
+<p>Then in order to install these modules we will run the following comamnd:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack build
+</code></pre></div></div>
+
+<p>One of the most unfortunate parts of haskell is waiting for all your code to compile if you come from python, node.js, or any other interpreted language you won’t be used to the frequent breaks needed to recompile all of these packages. It would be nice if the binaries could be directly downloaded and there is some work being done on this currently via Nix but that is far outside the scope of this tutorial.</p>
+
+<p>Once we’ve got everything installed we can start building the core logic to our user signup.</p>
+
+<p>We are going to want the following data from our users when they signup:</p>
+
+<ul>
+  <li>Name: JSON</li>
+  <li>Email: Text</li>
+  <li>Password: Text</li>
+</ul>
+
+<p>So to model this in haskell we will end up using the following datatypes:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">,</span> <span class="kt">Generic</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">Name</span> <span class="o">=</span> <span class="kt">Name</span>
+  <span class="p">{</span> <span class="n">firstname</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">lastname</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">,</span> <span class="kt">Generic</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>For now we’ll keep all this in the file src/Lib.hs and worry about the folder structure later as we build out the application.</p>
+
+<p>So your files should look like this.</p>
+
+<p><em>app/Main.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Main</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Lib</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="kt">Lib</span><span class="o">.</span><span class="n">main</span>
+</code></pre></div></div>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">putStrLn</span> <span class="s">"someFunc"</span>
+
+<span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">Name</span> <span class="o">=</span> <span class="kt">Name</span>
+  <span class="p">{</span> <span class="n">firstname</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">lastname</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now in true haskell spirit lets compile our code get yelled at by GHC and frantically scramble to fix all those errors.</p>
+
+<p>In order to develop more effectively what we will do is use auto reloading of our sorce code files. So instead of using <code class="highlighter-rouge">stack build</code> we will use the following flags</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack build <span class="nt">--fast</span> <span class="nt">--file-watch</span>
+</code></pre></div></div>
+
+<p><strong>Note:</strong> <em>Note you can also use ghcid but this requires more setup.</em></p>
+
+<p>Now with that settled lets look at the errors we get. One of the errors you should see is:
+<code class="highlighter-rouge">Not in scope: type constructor or class `Text'</code>
+So how do we fix that… well if you rember the <code class="highlighter-rouge">text</code> package we added to our <em>package.yaml</em> file contains the necessary type <code class="highlighter-rouge">Text</code> that we are looking for so lets add this line to our file:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">putStrLn</span> <span class="s">"someFunc"</span>
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Once we add that to the file and hit save we should see our errors disappear.</p>
+
+<p>Now let’s make sure that when we are making these data types that they comply with what we expect.</p>
+
+<p>Lets first start with creating the smart constructor for <code class="highlighter-rouge">Name</code> Lets arbitrarily assume that all <code class="highlighter-rouge">firstname</code> and <code class="highlighter-rouge">lastname</code> should be less than 50 characters and more than 0. We can use that to come up with the following functions.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+
+<span class="n">mkName</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Name</span>
+<span class="n">mkName</span> <span class="n">fName</span> <span class="n">lName</span> <span class="o">=</span> <span class="kt">Name</span> <span class="o">&lt;$&gt;</span> <span class="n">fstName</span> <span class="o">&lt;*&gt;</span> <span class="n">lstName</span> 
+ <span class="kr">where</span> <span class="n">fstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">fName</span>
+       <span class="n">lstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">lName</span>
+
+<span class="n">nameFieldTester</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Text</span>
+<span class="n">nameFieldTester</span> <span class="n">field</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="o">=</span> <span class="kt">Left</span> <span class="s">"Name Fields must be less than 50 characters and Greater than 0 Characters"</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kt">Left</span> <span class="s">"Name Fields must be less than 50 characters and Greater than 0 characters"</span>
+ <span class="o">|</span> <span class="n">otherwise</span>                   <span class="o">=</span> <span class="kt">Right</span> <span class="n">field</span>
+
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Now for password we want to ensure that the password follows some strength criteria. Lets say that we need at least 8 characters and we need to make sure that we have at least one upper case and 1 special or numeric character. We could write a Regex but lets have some fun with haskell and skip introducing a new package. Here is a super quick rudimentary solution I came up with.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+<span class="n">passwordValidation</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Text</span>
+<span class="n">passwordValidation</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">8</span>  <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="p">(</span><span class="n">passwordStrength</span> <span class="n">a</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Right</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="kr">where</span> <span class="n">passwordErrorMessage</span> <span class="o">=</span> <span class="s">"Passwords Must be greater than 8 Characters and less than 20 and have at least 1 uppercase letter and 1 special or numeric character"</span>
+
+<span class="n">passwordStrength</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">passwordStrength</span> <span class="n">a</span> <span class="n">lowercases</span> <span class="n">uppercases</span> <span class="n">specialcases</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span>                   <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kr">if</span> <span class="p">((</span><span class="n">lowercases</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="kr">then</span> <span class="p">(</span><span class="kt">True</span><span class="p">)</span> <span class="kr">else</span> <span class="p">(</span><span class="kt">False</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">lowerCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span> 
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">upperCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">specialCases</span> <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">True</span>
+ <span class="kr">where</span> <span class="n">lowerCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'a'</span><span class="o">..</span><span class="sc">'z'</span><span class="p">]</span>
+       <span class="n">upperCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'A'</span><span class="o">..</span><span class="sc">'Z'</span><span class="p">]</span>
+       <span class="n">specialCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span> <span class="sc">'4'</span><span class="p">,</span> <span class="sc">'5'</span><span class="p">,</span> <span class="sc">'6'</span><span class="p">,</span> <span class="sc">'7'</span><span class="p">,</span> <span class="sc">'8'</span><span class="p">,</span> <span class="sc">'9'</span><span class="p">,</span> <span class="sc">'!'</span><span class="p">,</span> <span class="sc">'@'</span><span class="p">,</span> <span class="sc">'#'</span><span class="p">,</span> <span class="sc">'$'</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'^'</span><span class="p">,</span> <span class="sc">'&amp;'</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'?'</span><span class="p">]</span>
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Now lastly we want to confirm that our potential user has a valid email. In order to do this we will use the very robust <code class="highlighter-rouge">email-validate</code> package that we included in our <em>package.yaml</em>. In this section we will get our first taste of the TypeFoo needed in order to deal with haskells ByteString, Text, and String Types.</p>
+
+<p>In the <code class="highlighter-rouge">email-validate</code> package we see the follwing function.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">validate</span> <span class="o">::</span> <span class="kt">ByteString</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">EmailAddress</span>
+</code></pre></div></div>
+
+<p>Perfect!</p>
+
+<p>Well not really we need to convert our potential email address that has type <code class="highlighter-rouge">Text</code> to <code class="highlighter-rouge">ByteString</code> and we want to return <code class="highlighter-rouge">Text</code> in our function not <code class="highlighter-rouge">String</code> and we don’t want to return an <code class="highlighter-rouge">EmailAddress</code> we want to return Text. Sooo what do we do. Lets write a wrapper around the function that handles all this logic.</p>
+
+<p>first lets make sure we have the correct packages</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+
+<span class="o">...</span>
+
+</code></pre></div></div>
+
+<p>Then we can write our function:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+<span class="n">validateEmail</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Text</span>
+<span class="n">validateEmail</span> <span class="n">candidate</span> <span class="o">=</span> 
+ <span class="kr">case</span> <span class="n">isEmail</span> <span class="kr">of</span>
+  <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kt">Left</span> <span class="p">(</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+  <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kt">Right</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">decodeUtf8</span> <span class="o">$</span> <span class="kt">EV</span><span class="o">.</span><span class="n">toByteString</span> <span class="n">s</span><span class="p">)</span>
+ <span class="kr">where</span> <span class="n">isEmail</span> <span class="o">=</span> <span class="kt">EV</span><span class="o">.</span><span class="n">validate</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">encodeUtf8</span> <span class="n">candidate</span><span class="p">)</span>
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Lets explain this a little. We pass our potential password in but it’s of type text so we convert that to a ByteString with <code class="highlighter-rouge">encodeUtf8</code>. Then we get a <code class="highlighter-rouge">Either String EmailAddress</code> from the isEmail value. If we get a <code class="highlighter-rouge">Left String</code> we use <code class="highlighter-rouge">pack :: String -&gt; Text</code> to return a Text value and if we get an <code class="highlighter-rouge">EmailAddress</code> we convert it to text by using <code class="highlighter-rouge">decodeUtf8 :: ByteString -&gt; Text</code> and <code class="highlighter-rouge">toByteString :: EmailAddress -&gt; ByteString</code>.</p>
+
+<p>and now we can construct our UserSignup smart constructor.</p>
+
+<p><strong>Note:</strong> <em>This doesn’t necessarily comply with best practices for smart constructors. Normally you would put these functions in another module and export only <code class="highlighter-rouge">mkUserSignup</code> and <code class="highlighter-rouge">UserSignup</code> with our it’s constructors that way you must pass the validation to create the desired value.</em></p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mkUserSignup</span> <span class="o">::</span> <span class="kt">Name</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">UserSignup</span>
+<span class="n">mkUserSignup</span> <span class="n">na</span> <span class="n">em</span> <span class="n">pass</span> <span class="o">=</span> <span class="kt">UserSignup</span> <span class="o">&lt;$&gt;</span> <span class="n">mkName</span> <span class="p">(</span><span class="n">firstname</span> <span class="n">na</span><span class="p">)</span> <span class="p">(</span><span class="n">lastname</span> <span class="n">na</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">validateEmail</span> <span class="n">em</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">passwordValidation</span> <span class="n">pass</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Ok so we did all that work for validation and we now have a file that looks like this:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span> <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">putStrLn</span> <span class="s">"someFunc"</span>
+
+<span class="n">mkName</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Name</span>
+<span class="n">mkName</span> <span class="n">fName</span> <span class="n">lName</span> <span class="o">=</span> <span class="kt">Name</span> <span class="o">&lt;$&gt;</span> <span class="n">fstName</span> <span class="o">&lt;*&gt;</span> <span class="n">lstName</span> 
+ <span class="kr">where</span> <span class="n">fstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">fName</span>
+       <span class="n">lstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">lName</span>
+
+<span class="n">mkUserSignup</span> <span class="o">::</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Name</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">UserSignup</span>
+<span class="n">mkUserSignup</span> <span class="n">na</span> <span class="n">em</span> <span class="n">pass</span> <span class="o">=</span> <span class="kt">UserSignup</span> <span class="o">&lt;$&gt;</span> <span class="n">na</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">validateEmail</span> <span class="n">em</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">passwordValidation</span> <span class="n">pass</span><span class="p">)</span>  
+
+<span class="n">nameFieldTester</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Text</span>
+<span class="n">nameFieldTester</span> <span class="n">field</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="n">otherwise</span>           <span class="o">=</span> <span class="kt">Right</span> <span class="n">field</span>
+ <span class="kr">where</span> <span class="n">nameError</span> <span class="o">=</span> <span class="s">"Name Fields must be less than 50 characters and Greater than 0 characters"</span>
+
+<span class="n">passwordValidation</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Text</span>
+<span class="n">passwordValidation</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">8</span>  <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="p">(</span><span class="n">passwordStrength</span> <span class="n">a</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Right</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="kr">where</span> <span class="n">passwordErrorMessage</span> <span class="o">=</span> <span class="s">"Passwords Must be greater than 8 Characters and less than 20 and have at least 1 uppercase letter and 1 special or numeric character"</span>
+
+<span class="n">passwordStrength</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">passwordStrength</span> <span class="n">a</span> <span class="n">lowercases</span> <span class="n">uppercases</span> <span class="n">specialcases</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span>                   <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kr">if</span> <span class="p">((</span><span class="n">lowercases</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="kr">then</span> <span class="p">(</span><span class="kt">True</span><span class="p">)</span> <span class="kr">else</span> <span class="p">(</span><span class="kt">False</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">lowerCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span> 
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">upperCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">specialCases</span> <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">True</span>
+ <span class="kr">where</span> <span class="n">lowerCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'a'</span><span class="o">..</span><span class="sc">'z'</span><span class="p">]</span>
+       <span class="n">upperCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'A'</span><span class="o">..</span><span class="sc">'Z'</span><span class="p">]</span>
+       <span class="n">specialCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span> <span class="sc">'4'</span><span class="p">,</span> <span class="sc">'5'</span><span class="p">,</span> <span class="sc">'6'</span><span class="p">,</span> <span class="sc">'7'</span><span class="p">,</span> <span class="sc">'8'</span><span class="p">,</span> <span class="sc">'9'</span><span class="p">,</span> <span class="sc">'!'</span><span class="p">,</span> <span class="sc">'@'</span><span class="p">,</span> <span class="sc">'#'</span><span class="p">,</span> <span class="sc">'$'</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'^'</span><span class="p">,</span> <span class="sc">'&amp;'</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'?'</span><span class="p">]</span>
+ 
+<span class="n">validateEmail</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Text</span>
+<span class="n">validateEmail</span> <span class="n">candidate</span> <span class="o">=</span> 
+ <span class="kr">case</span> <span class="n">isEmail</span> <span class="kr">of</span>
+  <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kt">Left</span> <span class="p">(</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+  <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kt">Right</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">decodeUtf8</span> <span class="o">$</span> <span class="kt">EV</span><span class="o">.</span><span class="n">toByteString</span> <span class="n">s</span><span class="p">)</span>
+ <span class="kr">where</span> <span class="n">isEmail</span> <span class="o">=</span> <span class="kt">EV</span><span class="o">.</span><span class="n">validate</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">encodeUtf8</span> <span class="n">candidate</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">Name</span> <span class="o">=</span> <span class="kt">Name</span>
+  <span class="p">{</span> <span class="n">firstname</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">,</span> <span class="n">lastname</span> <span class="o">::</span> <span class="kt">Text</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>All these <code class="highlighter-rouge">Text</code> Fields are going to be prone to errors we could easily switch up passwords and emails at a later point when we refactor. So lets leverage some of haskells type system to remedy this.</p>
+
+<p>lets create the following type aliases and change our data types to match</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">Email</span>     <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">Password</span>  <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">NameField</span> <span class="o">=</span> <span class="kt">Text</span>
+
+<span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Email</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Password</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">Name</span> <span class="o">=</span> <span class="kt">Name</span>
+  <span class="p">{</span> <span class="n">firstname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">,</span> <span class="n">lastname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>and now our functions look like this:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mkName</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Name</span>
+<span class="n">mkName</span> <span class="n">fName</span> <span class="n">lName</span> <span class="o">=</span> <span class="kt">Name</span> <span class="o">&lt;$&gt;</span> <span class="n">fstName</span> <span class="o">&lt;*&gt;</span> <span class="n">lstName</span> 
+ <span class="kr">where</span> <span class="n">fstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">fName</span>
+       <span class="n">lstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">lName</span>
+
+<span class="n">mkUserSignup</span> <span class="o">::</span> <span class="kt">Name</span> <span class="o">-&gt;</span> <span class="kt">Email</span> <span class="o">-&gt;</span> <span class="kt">Password</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">UserSignup</span>
+<span class="n">mkUserSignup</span> <span class="n">na</span> <span class="n">em</span> <span class="n">pass</span> <span class="o">=</span> <span class="kt">UserSignup</span> <span class="o">&lt;$&gt;</span> <span class="n">mkName</span> <span class="p">(</span><span class="n">firstname</span> <span class="n">na</span><span class="p">)</span> <span class="p">(</span><span class="n">lastname</span> <span class="n">na</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">validateEmail</span> <span class="n">em</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">passwordValidation</span> <span class="n">pass</span><span class="p">)</span>  
+
+<span class="n">nameFieldTester</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">NameField</span>
+<span class="n">nameFieldTester</span> <span class="n">field</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="n">otherwise</span>           <span class="o">=</span> <span class="kt">Right</span> <span class="n">field</span>
+ <span class="kr">where</span> <span class="n">nameError</span> <span class="o">=</span> <span class="s">"Name Fields must be less than 50 characters and Greater than 0 characters"</span>
+
+<span class="n">passwordValidation</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Password</span>
+<span class="n">passwordValidation</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">8</span>  <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="p">(</span><span class="n">passwordStrength</span> <span class="n">a</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Right</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="kr">where</span> <span class="n">passwordErrorMessage</span> <span class="o">=</span> <span class="s">"Passwords Must be greater than 8 Characters and less than 20 and have at least 1 uppercase letter and 1 special or numeric character"</span>
+
+<span class="n">passwordStrength</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">passwordStrength</span> <span class="n">a</span> <span class="n">lowercases</span> <span class="n">uppercases</span> <span class="n">specialcases</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span>                   <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kr">if</span> <span class="p">((</span><span class="n">lowercases</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="kr">then</span> <span class="p">(</span><span class="kt">True</span><span class="p">)</span> <span class="kr">else</span> <span class="p">(</span><span class="kt">False</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">lowerCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span> 
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">upperCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">specialCases</span> <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">True</span>
+ <span class="kr">where</span> <span class="n">lowerCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'a'</span><span class="o">..</span><span class="sc">'z'</span><span class="p">]</span>
+       <span class="n">upperCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'A'</span><span class="o">..</span><span class="sc">'Z'</span><span class="p">]</span>
+       <span class="n">specialCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span> <span class="sc">'4'</span><span class="p">,</span> <span class="sc">'5'</span><span class="p">,</span> <span class="sc">'6'</span><span class="p">,</span> <span class="sc">'7'</span><span class="p">,</span> <span class="sc">'8'</span><span class="p">,</span> <span class="sc">'9'</span><span class="p">,</span> <span class="sc">'!'</span><span class="p">,</span> <span class="sc">'@'</span><span class="p">,</span> <span class="sc">'#'</span><span class="p">,</span> <span class="sc">'$'</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'^'</span><span class="p">,</span> <span class="sc">'&amp;'</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'?'</span><span class="p">]</span>
+ 
+<span class="n">validateEmail</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Email</span>
+<span class="n">validateEmail</span> <span class="n">candidate</span> <span class="o">=</span> 
+ <span class="kr">case</span> <span class="n">isEmail</span> <span class="kr">of</span>
+  <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kt">Left</span> <span class="p">(</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+  <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kt">Right</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">decodeUtf8</span> <span class="o">$</span> <span class="kt">EV</span><span class="o">.</span><span class="n">toByteString</span> <span class="n">s</span><span class="p">)</span>
+ <span class="kr">where</span> <span class="n">isEmail</span> <span class="o">=</span> <span class="kt">EV</span><span class="o">.</span><span class="n">validate</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">encodeUtf8</span> <span class="n">candidate</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>It doesn’t introduce any extra type safety but it helps us to better describe our domain for when we look at our code later.</p>
+
+<p>Ok great now time for the fun part… Web Development. Yep that’s right now we’re going to start actually processing some data.</p>
+
+<p>For our server we will be using the <code class="highlighter-rouge">scotty</code> library that we included in our <code class="highlighter-rouge">package.yaml</code> it is part of the <code class="highlighter-rouge">WAI</code> (Web Application Interface) ecosystem. That was originally developed by Michael Snoyman. It is the backbone of all the major haskell web server libraries like <code class="highlighter-rouge">servant</code>, <code class="highlighter-rouge">yesod</code>, and <code class="highlighter-rouge">snap</code>. For this tutorial I chose the <code class="highlighter-rouge">scotty</code> library because in my opinion it is the easiest library to get started with. It is intended to be like <code class="highlighter-rouge">sinatra</code> from ruby, <code class="highlighter-rouge">flask</code> from python, or <code class="highlighter-rouge">express</code> from node.js. Well enough talking lets get to it and start slappng some code down.</p>
+
+<p>For the sake of simplicity we are going to keep going with our <em>Lib.hs</em> file with the intention to clean up our folder architecture later.</p>
+
+<p>lets change <em>src/Lib.hs</em> so that it looks like this now:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">app</span>
+
+<span class="n">app</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+
+<span class="o">...</span>    
+</code></pre></div></div>
+
+<p>now we’ll run:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack build
+</code></pre></div></div>
+
+<p>and then we’ll run</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack <span class="nb">exec </span>scotty-tutorial-exe
+</code></pre></div></div>
+
+<p>In order to actually run the server. You should see</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Setting phasers to stun... <span class="o">(</span>port 3000<span class="o">)</span> <span class="o">(</span>ctrl-c to quit<span class="o">)</span>
+</code></pre></div></div>
+
+<p>In your terminal. You can now go visit <code class="highlighter-rouge">localhost:3000/whatever</code> and youll see the text thaty <code class="highlighter-rouge">scotty</code> renders. Why is this happending?</p>
+
+<p>Lets take a look at the method:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>this tells scotty that any HTTP request that is a <code class="highlighter-rouge">GET</code> with only one route paramter should have it’s route paramter extracted by the function <code class="highlighter-rouge">param :: Parsable a =&gt; Text -&gt; ActionM a</code> and since it is produced by the ActionM monad we will get whatver the a value is due to <code class="highlighter-rouge">&lt;-</code> binding.</p>
+
+<p>Notice if we go to somewhere with two parameters though we will get an error try visting <code class="highlighter-rouge">localhost:3000/ethan/gardner</code> and you will get a <code class="highlighter-rouge">404</code> from the server. Or try using a different request verb like <code class="highlighter-rouge">POST</code> or <code class="highlighter-rouge">PUT</code> and you will also get an error. We will handle these errors later on.</p>
+
+<p>So lets get taking care of business with this whole user signup ordeal. Lets replace our app function with this.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">user</span> <span class="o">&lt;-</span> <span class="n">jsonData</span> <span class="o">::</span> <span class="kt">ActionM</span> <span class="kt">UserSignup</span>
+    <span class="n">text</span> <span class="o">$</span> <span class="s">"GREAT USER CREATED"</span>
+
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>So we will get the opportunity to deserialize a user and serialize a user back into JSON <em>Discliamer never send passwords back to a user this is just to show how to write the instances at first and we will change it</em></p>
+
+<p>If we start up GHC again:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack build <span class="nt">--fast</span> <span class="nt">--file-watch</span>
+</code></pre></div></div>
+
+<p>we should see the following error:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>No instance for (aeson-1.4.6.0:Data.Aeson.Types.FromJSON.FromJSON
+                         UserSignup)                        
+</code></pre></div></div>
+
+<p>What do they mean? Well they’re telling us that we need to write an instance of FromJSON for our UserSignup type, this is because jsonData’s type signature is: <code class="highlighter-rouge">jsonData :: FromJSON a =&gt; ActionM a</code></p>
+
+<p>So lets import <code class="highlighter-rouge">aeson</code> which we added to our <em>package.yaml</em></p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span>
+</code></pre></div></div>
+
+<p>and we can start writing our instance:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> 
+   <span class="kt">UserSignup</span> <span class="o">&lt;$&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"name"</span>  <span class="o">&lt;*&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"email"</span> <span class="o">&lt;*&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"password"</span> 
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to be an object"</span>
+</code></pre></div></div>
+
+<p>GHC yells at us though and says:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>No instance <span class="k">for</span> <span class="o">(</span>FromJSON Name<span class="o">)</span> arising from a use of <span class="sb">`</span>.:<span class="s1">'
+</span></code></pre></div></div>
+
+<p>Well duh we need to write that one as well.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> 
+   <span class="kt">Name</span> <span class="o">&lt;$&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"firstname"</span>  <span class="o">&lt;*&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"lastname"</span>
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to have a name of type object"</span>
+</code></pre></div></div>
+
+<p>If we add the following we can get GHC to shut up and we can go right on our way. For anyone that’s experienced in haskell though they probably know that all these instance could’ve been derived generically with the:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">{-# LANGUAGE DeriveGeneric #-}</span>
+</code></pre></div></div>
+
+<p>and then shortend to</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+</code></pre></div></div>
+
+<p>But we want to stick to the basics here so lets just write them by hand for now and pull out the tricks later.</p>
+
+<p>Ok so lets build our app and run it</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">$</span> <span class="n">stack</span> <span class="n">exec</span> <span class="n">scotty</span><span class="o">-</span><span class="n">tutorial</span><span class="o">-</span><span class="n">exe</span>
+</code></pre></div></div>
+<p>and then we’ll send over some json.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ethan"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gardner"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner@ethan.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Holamundo1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>and we get back:</p>
+
+<p><code class="highlighter-rouge">GREAT USER CREATED</code></p>
+
+<p>now lets send it some bad json:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ethan"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gardner"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner@ethan.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>ooo we don’t get what we want there:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h1&gt;500 Internal Server Error&lt;/h1&gt;jsonData - no parse: Error in $: key "password" not found. Data was:{
+  "name": {
+    "firstname": "Ethan",
+    "lastname": "Gardner"
+  },
+  "email": "ethangardner@ethan.com"
+}
+</code></pre></div></div>
+
+<p>Yeah that’s not so pretty. Let’s fix that so that we can actually get something useful back from this for our potential users.</p>
+
+<p>We can do this two different ways. We can use the function <code class="highlighter-rouge">rescue</code> provided by scotty or we can use <code class="highlighter-rouge">eitherDecode</code> provided by <code class="highlighter-rouge">aeson</code> and pass the request body to it directly. Let’s go with the second option so that we are a little bit less tied to the <code class="highlighter-rouge">scotty</code> framework.</p>
+
+<p>lets change our app function to look like this:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+    <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+    <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="p">(</span><span class="kt">TL</span><span class="o">.</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="p">(</span><span class="s">"User Created"</span><span class="p">)</span>
+
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>If we pass the same bad json we should see a better error message:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error in $: key "password" not found
+</code></pre></div></div>
+
+<p>Ehh that’s a little better but we’re still getting a 200 from this request let’s make it so that we receive a 400 when we get invalid data in order to accomplish that we will use a function provided by scotty <code class="highlighter-rouge">status :: Status -&gt; ActionM ()</code> but Status is not provided by scotty we will need the <code class="highlighter-rouge">http-types</code> package we installed earlier for that.</p>
+
+<p>so lets add the following imoprt to our file and change our <code class="highlighter-rouge">app</code> function to reflect the desired change.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+<span class="kr">import</span>           <span class="nn">Network.HTTP.Types.Status</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">app</span>
+
+<span class="n">app</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+    <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+    <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">status</span> <span class="n">status400</span>
+        <span class="n">text</span> <span class="p">(</span><span class="kt">TL</span><span class="o">.</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="p">(</span><span class="s">"User Created"</span><span class="p">)</span>
+
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Now your probably thinking that we could just send any data that fits the user schema and we would accept it… and your’re right so how are we going to fix that? We’ll we will use our <code class="highlighter-rouge">mkUserSignup</code> function in the <code class="highlighter-rouge">FromJSON</code> instance of <code class="highlighter-rouge">UserSignup</code>. So lets modify out instance to look like the following:</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="kr">do</span>
+   <span class="n">n</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"name"</span>
+   <span class="n">e</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"email"</span>
+   <span class="n">p</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"password"</span>
+   <span class="kr">case</span> <span class="p">(</span><span class="n">mkUserSignup</span> <span class="n">n</span> <span class="n">e</span> <span class="n">p</span><span class="p">)</span> <span class="kr">of</span>
+     <span class="kt">Left</span> <span class="n">er</span> <span class="o">-&gt;</span> <span class="n">fail</span> <span class="o">$</span> <span class="p">(</span><span class="n">unpack</span> <span class="n">er</span><span class="p">)</span>
+     <span class="kt">Right</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="n">r</span> 
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to be an object"</span>
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Perfect now you can send in all the data you want via JSON and it will have to pass our UserSignup constructor!</p>
+
+<p>Let’s test it out lets send the following json:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ethan"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gardner"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner@ethan.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"holamundo@1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Response:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error in $: Passwords Must be greater than 8 Characters and less than 20 and have at least 1 uppercase letter and 1 special or numeric character
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ethannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gardner"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner@ethan.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Holamundo@1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Response:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error in $: Name Fields must be less than 50 characters and Greater than 0 characters
+</code></pre></div></div>
+
+<p>And you can try it with some more inputs if you like but for now I think this is Ok. Of Course it probably would be nice to collect all of those errors and send them back to the user, and we will later but you’ll need a little bit more advanced knowledge of how to carry around the failures of each of these and we’ll also strong type Email, Password, and Name by making them new types. If you’d like to take a peak at the approach we will take you can look at this blog post (https://bitemyapp.com/blog/strong-types-and-testing/) by Chris Allen who is the Author of <em>Haskell Programming From First Principles</em> which i heavily recommend to anyone that is trying to learn haskell.</p>
+
+<p>So now that we have our error messages all tied up let’s wrap them in some JSON to send back to our user.</p>
+
+<p><em>src/Lib.hs</em></p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">JSONError</span> <span class="o">=</span> <span class="kt">JSONError</span> <span class="p">{</span> <span class="n">message</span> <span class="o">::</span> <span class="kt">String</span> <span class="p">}</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">JSONError</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">je</span> <span class="o">=</span> <span class="n">object</span> <span class="p">[</span><span class="s">"message"</span> <span class="o">.=</span> <span class="n">message</span> <span class="n">je</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>And then lets change our <code class="highlighter-rouge">app</code> function to properly handle the errors by changing it to the following:</p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">JSONError</span> <span class="o">=</span> <span class="kt">JSONError</span> <span class="p">{</span> <span class="n">message</span> <span class="o">::</span> <span class="kt">String</span> <span class="p">}</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">JSONError</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">je</span> <span class="o">=</span> <span class="n">object</span> <span class="p">[</span><span class="s">"message"</span> <span class="o">.=</span> <span class="n">message</span> <span class="n">je</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>and when we send bad json let’s check out the response:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"firstname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ethannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gardner"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethangardner@ethan.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Holamundo@1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Response:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "message": "Error in $: Name Fields must be less than 50 characters and Greater than 0 characters"
+}
+</code></pre></div></div>
+
+<p>Great well I think we’re at a decent stopping point here the next thing we’ll do is figure out how we can save our users into a Postgreql database so we can start getting on with adding some cooler features to this like Email Verification, AWS S3 image upload and more as well as Refactor our application into a more complex monad transformer stack that will allow us to add features with less verbosity.</p>
+
+<p>The final <code class="highlighter-rouge">Lib.hs</code> file looks like this.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kr">module</span> <span class="nn">Lib</span>
+    <span class="p">(</span> <span class="nf">main</span>
+    <span class="p">)</span> <span class="kr">where</span>
+
+<span class="kr">import</span>           <span class="nn">Data.Text</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Encoding</span> <span class="k">as</span> <span class="n">TE</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Text.Email.Validate</span> <span class="k">as</span> <span class="n">EV</span>
+<span class="kr">import</span>           <span class="nn">Web.Scotty</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson</span> <span class="k">hiding</span> <span class="p">(</span><span class="nf">json</span><span class="p">)</span>
+<span class="kr">import</span>           <span class="nn">Data.Aeson.Types</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.Text.Lazy</span> <span class="k">as</span> <span class="n">TL</span>
+<span class="kr">import</span>           <span class="nn">Network.HTTP.Types.Status</span>
+
+<span class="n">main</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">app</span>
+
+<span class="n">app</span> <span class="o">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="kr">do</span>
+  <span class="n">scotty</span> <span class="mi">3000</span> <span class="o">$</span> <span class="kr">do</span>
+   <span class="n">post</span> <span class="s">"/user"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">body</span>
+    <span class="kr">let</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">eitherDecode</span> <span class="n">b</span><span class="p">)</span><span class="o">::</span> <span class="kt">Either</span> <span class="kt">String</span> <span class="kt">UserSignup</span>
+    <span class="kr">case</span> <span class="n">j</span> <span class="kr">of</span>
+      <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kr">do</span>
+        <span class="n">status</span> <span class="n">status400</span>
+        <span class="n">json</span> <span class="o">$</span> <span class="kt">JSONError</span> <span class="n">e</span>
+      <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="p">(</span><span class="s">"User Created"</span><span class="p">)</span>
+
+   <span class="n">get</span> <span class="s">"/:word"</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">beam</span> <span class="o">&lt;-</span> <span class="n">param</span> <span class="s">"word"</span>
+    <span class="n">html</span> <span class="o">$</span> <span class="n">mconcat</span> <span class="p">[</span><span class="s">"&lt;h1&gt;Scotty, "</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="s">" me up!&lt;/h1&gt;"</span><span class="p">]</span>
+
+<span class="n">mkName</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Name</span>
+<span class="n">mkName</span> <span class="n">fName</span> <span class="n">lName</span> <span class="o">=</span> <span class="kt">Name</span> <span class="o">&lt;$&gt;</span> <span class="n">fstName</span> <span class="o">&lt;*&gt;</span> <span class="n">lstName</span> 
+ <span class="kr">where</span> <span class="n">fstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">fName</span>
+       <span class="n">lstName</span> <span class="o">=</span> <span class="n">nameFieldTester</span> <span class="n">lName</span>
+
+<span class="n">mkUserSignup</span> <span class="o">::</span> <span class="kt">Name</span> <span class="o">-&gt;</span> <span class="kt">Email</span> <span class="o">-&gt;</span> <span class="kt">Password</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">UserSignup</span>
+<span class="n">mkUserSignup</span> <span class="n">na</span> <span class="n">em</span> <span class="n">pass</span> <span class="o">=</span> <span class="kt">UserSignup</span> <span class="o">&lt;$&gt;</span> <span class="n">mkName</span> <span class="p">(</span><span class="n">firstname</span> <span class="n">na</span><span class="p">)</span> <span class="p">(</span><span class="n">lastname</span> <span class="n">na</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">validateEmail</span> <span class="n">em</span><span class="p">)</span> <span class="o">&lt;*&gt;</span> <span class="p">(</span><span class="n">passwordValidation</span> <span class="n">pass</span><span class="p">)</span>  
+
+<span class="n">nameFieldTester</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">NameField</span>
+<span class="n">nameFieldTester</span> <span class="n">field</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">field</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">nameError</span>
+ <span class="o">|</span> <span class="n">otherwise</span>           <span class="o">=</span> <span class="kt">Right</span> <span class="n">field</span>
+ <span class="kr">where</span> <span class="n">nameError</span> <span class="o">=</span> <span class="s">"Name Fields must be less than 50 characters and Greater than 0 characters"</span>
+
+<span class="n">passwordValidation</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Password</span>
+<span class="n">passwordValidation</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">8</span>  <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="o">|</span> <span class="p">(</span><span class="n">passwordStrength</span> <span class="n">a</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="kt">Right</span> <span class="n">a</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">Left</span> <span class="n">passwordErrorMessage</span>
+ <span class="kr">where</span> <span class="n">passwordErrorMessage</span> <span class="o">=</span> <span class="s">"Passwords Must be greater than 8 Characters and less than 20 and have at least 1 uppercase letter and 1 special or numeric character"</span>
+
+<span class="n">passwordStrength</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="n">passwordStrength</span> <span class="n">a</span> <span class="n">lowercases</span> <span class="n">uppercases</span> <span class="n">specialcases</span>
+ <span class="o">|</span> <span class="kt">T</span><span class="o">.</span><span class="n">length</span> <span class="n">a</span>                   <span class="o">==</span> <span class="mi">0</span> <span class="o">=</span> <span class="kr">if</span> <span class="p">((</span><span class="n">lowercases</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span> <span class="kr">then</span> <span class="p">(</span><span class="kt">True</span><span class="p">)</span> <span class="kr">else</span> <span class="p">(</span><span class="kt">False</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">lowerCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span> 
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">upperCases</span>   <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">elem</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">head</span> <span class="n">a</span><span class="p">)</span> <span class="n">specialCases</span> <span class="o">==</span> <span class="kt">True</span> <span class="o">=</span> <span class="n">passwordStrength</span> <span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">drop</span> <span class="mi">1</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="n">lowercases</span><span class="p">)</span> <span class="p">(</span><span class="n">uppercases</span><span class="p">)</span> <span class="p">(</span><span class="n">specialcases</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="o">|</span> <span class="n">otherwise</span> <span class="o">=</span> <span class="kt">True</span>
+ <span class="kr">where</span> <span class="n">lowerCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'a'</span><span class="o">..</span><span class="sc">'z'</span><span class="p">]</span>
+       <span class="n">upperCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'A'</span><span class="o">..</span><span class="sc">'Z'</span><span class="p">]</span>
+       <span class="n">specialCases</span> <span class="o">=</span> <span class="p">[</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span> <span class="sc">'4'</span><span class="p">,</span> <span class="sc">'5'</span><span class="p">,</span> <span class="sc">'6'</span><span class="p">,</span> <span class="sc">'7'</span><span class="p">,</span> <span class="sc">'8'</span><span class="p">,</span> <span class="sc">'9'</span><span class="p">,</span> <span class="sc">'!'</span><span class="p">,</span> <span class="sc">'@'</span><span class="p">,</span> <span class="sc">'#'</span><span class="p">,</span> <span class="sc">'$'</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'^'</span><span class="p">,</span> <span class="sc">'&amp;'</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'?'</span><span class="p">]</span>
+ 
+<span class="n">validateEmail</span> <span class="o">::</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">Email</span>
+<span class="n">validateEmail</span> <span class="n">candidate</span> <span class="o">=</span> 
+ <span class="kr">case</span> <span class="n">isEmail</span> <span class="kr">of</span>
+  <span class="kt">Left</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="kt">Left</span> <span class="p">(</span><span class="n">pack</span> <span class="n">e</span><span class="p">)</span>
+  <span class="kt">Right</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="kt">Right</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">decodeUtf8</span> <span class="o">$</span> <span class="kt">EV</span><span class="o">.</span><span class="n">toByteString</span> <span class="n">s</span><span class="p">)</span>
+ <span class="kr">where</span> <span class="n">isEmail</span> <span class="o">=</span> <span class="kt">EV</span><span class="o">.</span><span class="n">validate</span> <span class="p">(</span><span class="kt">TE</span><span class="o">.</span><span class="n">encodeUtf8</span> <span class="n">candidate</span><span class="p">)</span>
+
+<span class="kr">type</span> <span class="kt">Email</span>     <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">Password</span>  <span class="o">=</span> <span class="kt">Text</span>
+<span class="kr">type</span> <span class="kt">NameField</span> <span class="o">=</span> <span class="kt">Text</span>
+
+<span class="kr">data</span> <span class="kt">UserSignup</span> <span class="o">=</span> <span class="kt">UserSignup</span>
+  <span class="p">{</span> <span class="n">name</span> <span class="o">::</span> <span class="kt">Name</span>
+  <span class="p">,</span> <span class="n">email</span> <span class="o">::</span> <span class="kt">Email</span>
+  <span class="p">,</span> <span class="n">password</span> <span class="o">::</span> <span class="kt">Password</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">Name</span> <span class="o">=</span> <span class="kt">Name</span>
+  <span class="p">{</span> <span class="n">firstname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">,</span> <span class="n">lastname</span> <span class="o">::</span> <span class="kt">NameField</span>
+  <span class="p">}</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Eq</span><span class="p">,</span> <span class="kt">Show</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">JSONError</span> <span class="o">=</span> <span class="kt">JSONError</span> <span class="p">{</span> <span class="n">message</span> <span class="o">::</span> <span class="kt">String</span> <span class="p">}</span>
+
+<span class="kr">instance</span> <span class="kt">ToJSON</span> <span class="kt">JSONError</span> <span class="kr">where</span>
+  <span class="n">toJSON</span> <span class="n">je</span> <span class="o">=</span> <span class="n">object</span> <span class="p">[</span><span class="s">"message"</span> <span class="o">.=</span> <span class="n">message</span> <span class="n">je</span><span class="p">]</span>
+
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">UserSignup</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="kr">do</span>
+   <span class="n">n</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"name"</span>
+   <span class="n">e</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"email"</span>
+   <span class="n">p</span> <span class="o">&lt;-</span> <span class="n">v</span> <span class="o">.:</span> <span class="s">"password"</span>
+   <span class="kr">case</span> <span class="p">(</span><span class="n">mkUserSignup</span> <span class="n">n</span> <span class="n">e</span> <span class="n">p</span><span class="p">)</span> <span class="kr">of</span>
+     <span class="kt">Left</span> <span class="n">er</span> <span class="o">-&gt;</span> <span class="n">fail</span> <span class="o">$</span> <span class="p">(</span><span class="n">unpack</span> <span class="n">er</span><span class="p">)</span>
+     <span class="kt">Right</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">return</span> <span class="n">r</span> 
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to be an object"</span>
+
+<span class="kr">instance</span> <span class="kt">FromJSON</span> <span class="kt">Name</span> <span class="kr">where</span>
+  <span class="n">parseJSON</span> <span class="p">(</span><span class="kt">Object</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span>
+   <span class="kt">Name</span> <span class="o">&lt;$&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"firstname"</span>  <span class="o">&lt;*&gt;</span>
+   <span class="n">v</span> <span class="o">.:</span> <span class="s">"lastname"</span>
+  <span class="n">parseJSON</span> <span class="kr">_</span> <span class="o">=</span> <span class="n">fail</span> <span class="o">$</span> <span class="s">"Expected the UserSignup to have a name of type object"</span>
+</code></pre></div></div>
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=Scotty Tutorial Part 1&url=https://www.codewandering.com/scotty-tutorial-part-1/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=https://www.codewandering.com/scotty-tutorial-part-1/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=https://www.codewandering.com/scotty-tutorial-part-1/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+            <a href="/tags#Scotty" class="tag">&#35; Scotty</a>
+          
+            <a href="/tags#Haskell" class="tag">&#35; Haskell</a>
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+    <div id="disqus_thread" class="article-comments"></div>
+    <script>
+      (function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//ethanmgardner.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-155315616-1', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>
