@@ -1,4 +1,4 @@
-I"��<p>Ok lets get started Now we will start by building a larger haskell application from the ground up and we will first build simply using just explicit paramter passing and as few language extensions for simplicity. In order to get started we will first focus on building out the user signup portion of our application. Lets add some packages to our project so that we can really get started you will need to add the following to your package.yaml file.</p>
+I"�<p>Ok lets get started we will start by building a larger haskell application from the ground up and we will first build simply using just explicit paramter passing and as few language extensions as possible for simplicity. In order to get started we will first focus on building out our user signup validation and setting up a basic server. Lets add some packages to our project so that we can really get started you will need to add the following to your package.yaml file.</p>
 
 <p><em>package.yaml</em></p>
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span>                <span class="s">scotty-tutorial</span>
@@ -46,16 +46,16 @@
 
 <p>Adding the <code class="highlighter-rouge">OverloadedStrings</code> pragma to the default extensions will make it so that we don’t need to put <code class="highlighter-rouge">{-# LANGUAGE OverloadedStrings #-}</code> at the top of each of our source files. The pragmas in the default extensions will be used on all of our source files.</p>
 
-<p>The <code class="highlighter-rouge">OverloadedStrings</code> extesnsion allows us to use <code class="highlighter-rouge">Text</code> as our datatype for strings without explicitly declaring it.</p>
+<p>The <code class="highlighter-rouge">OverloadedStrings</code> extesnsion allows us to have a more polymorphic version of String literals in our application so that we don’t need to explicitly declare <code class="highlighter-rouge">Text</code> as our datatype when writing our strings.</p>
 
 <p>Then in order to install these modules we will run the following comamnd:</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack build
 </code></pre></div></div>
 
-<p>One of the most unfortunate parts of haskell is waiting for all your damn code to comile if you come from python, node.js, or any other interpreted language you won’t be used to the frequent breaks needed to recompile all of these packages. It would be nice if the binaries could be directly downloaded and there is some work being done on this currently via Nix but that is far outside the scope of this tutorial.</p>
+<p>One of the most unfortunate parts of haskell is waiting for all your code to compile if you come from python, node.js, or any other interpreted language you won’t be used to the frequent breaks needed to recompile all of these packages. It would be nice if the binaries could be directly downloaded and there is some work being done on this currently via Nix but that is far outside the scope of this tutorial.</p>
 
-<p>Once we’ve got everything install we can start building the core logic to our users signup.</p>
+<p>Once we’ve got everything installed we can start building the core logic to our user signup.</p>
 
 <p>We are going to want the following data from our users when they signup:</p>
 
@@ -119,6 +119,8 @@
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>stack build <span class="nt">--fast</span> <span class="nt">--file-watch</span>
 </code></pre></div></div>
 
+<p><strong>Note:</strong> <em>Note you can also use ghcid but this requires more setup.</em></p>
+
 <p>Now with that settled lets look at the errors we get. One of the errors you should see is:
 <code class="highlighter-rouge">Not in scope: type constructor or class `Text'</code>
 So how do we fix that… well if you rember the <code class="highlighter-rouge">text</code> package we added to our <em>package.yaml</em> file contains the necessary type <code class="highlighter-rouge">Text</code> that we are looking for so lets add this line to our file:</p>
@@ -158,7 +160,7 @@ So how do we fix that… well if you rember the <code class="highlighter-rouge">
 <span class="o">...</span>
 </code></pre></div></div>
 
-<p>Now for password we want to ensure that the password follows some strength criteria. Lets sat that we need at least 8 characters and we need to make sure that we have at least one upper case and 1 special or numeric character. We could write a Regex but lets have some fun with haskell and skip introducing a new package. Here is a super quick rudimentary solution I came up with.</p>
+<p>Now for password we want to ensure that the password follows some strength criteria. Lets say that we need at least 8 characters and we need to make sure that we have at least one upper case and 1 special or numeric character. We could write a Regex but lets have some fun with haskell and skip introducing a new package. Here is a super quick rudimentary solution I came up with.</p>
 
 <p><em>src/Lib.hs</em></p>
 <div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
@@ -183,7 +185,7 @@ So how do we fix that… well if you rember the <code class="highlighter-rouge">
 <span class="o">...</span>
 </code></pre></div></div>
 
-<p>Now lastly we want to confirm that our potential user has a valid email. In order to do this we will use the very robust <code class="highlighter-rouge">email-validate</code> package that we included in our <em>package.yaml</em>. In this section we will get our first taste of the Type foo needed in order to deal with haskells ByteString, Text, and String Types.</p>
+<p>Now lastly we want to confirm that our potential user has a valid email. In order to do this we will use the very robust <code class="highlighter-rouge">email-validate</code> package that we included in our <em>package.yaml</em>. In this section we will get our first taste of the TypeFoo needed in order to deal with haskells ByteString, Text, and String Types.</p>
 
 <p>In the <code class="highlighter-rouge">email-validate</code> package we see the follwing function.</p>
 
@@ -193,7 +195,7 @@ So how do we fix that… well if you rember the <code class="highlighter-rouge">
 
 <p>Perfect!</p>
 
-<p>Well not really we need to convert our potentail email address that has type <code class="highlighter-rouge">Text</code> to <code class="highlighter-rouge">ByteString</code> and we want to return <code class="highlighter-rouge">Text</code> in our function not <code class="highlighter-rouge">String</code> and we don’t want to return an <code class="highlighter-rouge">EmailAddress</code> we want to return Text. Sooo what do we do. Lets write a wrapper around the function that handles all this logic.</p>
+<p>Well not really we need to convert our potential email address that has type <code class="highlighter-rouge">Text</code> to <code class="highlighter-rouge">ByteString</code> and we want to return <code class="highlighter-rouge">Text</code> in our function not <code class="highlighter-rouge">String</code> and we don’t want to return an <code class="highlighter-rouge">EmailAddress</code> we want to return Text. Sooo what do we do. Lets write a wrapper around the function that handles all this logic.</p>
 
 <p>first lets make sure we have the correct packages</p>
 
@@ -226,6 +228,8 @@ So how do we fix that… well if you rember the <code class="highlighter-rouge">
 <p>Lets explain this a little. We pass our potential password in but it’s of type text so we convert that to a ByteString with <code class="highlighter-rouge">encodeUtf8</code>. Then we get a <code class="highlighter-rouge">Either String EmailAddress</code> from the isEmail value. If we get a <code class="highlighter-rouge">Left String</code> we use <code class="highlighter-rouge">pack :: String -&gt; Text</code> to return a Text value and if we get an <code class="highlighter-rouge">EmailAddress</code> we convert it to text by using <code class="highlighter-rouge">decodeUtf8 :: ByteString -&gt; Text</code> and <code class="highlighter-rouge">toByteString :: EmailAddress -&gt; ByteString</code>.</p>
 
 <p>and now we can construct our UserSignup smart constructor.</p>
+
+<p><strong>Note:</strong> <em>This doesn’t necessarily comply with best practices for smart constructors. Normally you would put these functions in another module and export only <code class="highlighter-rouge">mkUserSignup</code> and <code class="highlighter-rouge">UserSignup</code> with our it’s constructors that way you must pass the validation to create the desired value.</em></p>
 
 <p><em>src/Lib.hs</em></p>
 <div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mkUserSignup</span> <span class="o">::</span> <span class="kt">Name</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Text</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">Text</span> <span class="kt">UserSignup</span>

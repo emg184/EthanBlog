@@ -1,14 +1,14 @@
 ---
 layout: post
-title: How I Rest From Work
-date: 2017-09-12 13:32:20 +0300
-description: You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. # Add post description (optional)
-img: i-rest.jpg # Add image post (optional)
+title: Scotty Tutorial Part 1
+date: 2020-01-02
+description: Basic Server Setup and JSON validation.
+img: Haskell.png # Add image post (optional)
 fig-caption: # Add figcaption (optional)
-tags: [Holidays, Hawaii]
+tags: [Scotty, Haskell]
 ---
 
-Ok lets get started Now we will start by building a larger haskell application from the ground up and we will first build simply using just explicit paramter passing and as few language extensions for simplicity. In order to get started we will first focus on building out the user signup portion of our application. Lets add some packages to our project so that we can really get started you will need to add the following to your package.yaml file.
+Ok lets get started we will start by building a larger haskell application from the ground up and we will first build simply using just explicit paramter passing and as few language extensions as possible for simplicity. In order to get started we will first focus on building out our user signup validation and setting up a basic server. Lets add some packages to our project so that we can really get started you will need to add the following to your package.yaml file.
 
 *package.yaml*
 ```yaml
@@ -57,7 +57,7 @@ tests:
 
 Adding the ```OverloadedStrings``` pragma to the default extensions will make it so that we don't need to put ```{-# LANGUAGE OverloadedStrings #-}``` at the top of each of our source files. The pragmas in the default extensions will be used on all of our source files.
 
-The ```OverloadedStrings``` extesnsion allows us to use `Text` as our datatype for strings without explicitly declaring it.
+The ```OverloadedStrings``` extesnsion allows us to have a more polymorphic version of String literals in our application so that we don't need to explicitly declare `Text` as our datatype when writing our strings.
 
 Then in order to install these modules we will run the following comamnd:
 
@@ -65,9 +65,9 @@ Then in order to install these modules we will run the following comamnd:
 $ stack build
 ```
 
-One of the most unfortunate parts of haskell is waiting for all your damn code to comile if you come from python, node.js, or any other interpreted language you won't be used to the frequent breaks needed to recompile all of these packages. It would be nice if the binaries could be directly downloaded and there is some work being done on this currently via Nix but that is far outside the scope of this tutorial.
+One of the most unfortunate parts of haskell is waiting for all your code to compile if you come from python, node.js, or any other interpreted language you won't be used to the frequent breaks needed to recompile all of these packages. It would be nice if the binaries could be directly downloaded and there is some work being done on this currently via Nix but that is far outside the scope of this tutorial.
 
-Once we've got everything install we can start building the core logic to our users signup.
+Once we've got everything installed we can start building the core logic to our user signup.
 
 We are going to want the following data from our users when they signup:
 
@@ -133,6 +133,8 @@ data Name = Name
 $ stack build --fast --file-watch
 ```
 
+**Note:** *Note you can also use ghcid but this requires more setup.*
+
 Now with that settled lets look at the errors we get. One of the errors you should see is:
 ```Not in scope: type constructor or class `Text'```
 So how do we fix that... well if you rember the ```text``` package we added to our *package.yaml* file contains the necessary type ```Text``` that we are looking for so lets add this line to our file:
@@ -174,7 +176,7 @@ nameFieldTester field
 ...
 ```
 
-Now for password we want to ensure that the password follows some strength criteria. Lets sat that we need at least 8 characters and we need to make sure that we have at least one upper case and 1 special or numeric character. We could write a Regex but lets have some fun with haskell and skip introducing a new package. Here is a super quick rudimentary solution I came up with.
+Now for password we want to ensure that the password follows some strength criteria. Lets say that we need at least 8 characters and we need to make sure that we have at least one upper case and 1 special or numeric character. We could write a Regex but lets have some fun with haskell and skip introducing a new package. Here is a super quick rudimentary solution I came up with.
 
 *src/Lib.hs*
 ```haskell 
@@ -200,7 +202,7 @@ passwordStrength a lowercases uppercases specialcases
 ...
 ```
 
-Now lastly we want to confirm that our potential user has a valid email. In order to do this we will use the very robust ```email-validate``` package that we included in our *package.yaml*. In this section we will get our first taste of the Type foo needed in order to deal with haskells ByteString, Text, and String Types.  
+Now lastly we want to confirm that our potential user has a valid email. In order to do this we will use the very robust ```email-validate``` package that we included in our *package.yaml*. In this section we will get our first taste of the TypeFoo needed in order to deal with haskells ByteString, Text, and String Types.  
 
 In the `email-validate` package we see the follwing function.
 
@@ -211,7 +213,7 @@ validate :: ByteString -> Either String EmailAddress
 
 Perfect!
 
-Well not really we need to convert our potentail email address that has type `Text` to `ByteString` and we want to return `Text` in our function not `String` and we don't want to return an `EmailAddress` we want to return Text. Sooo what do we do. Lets write a wrapper around the function that handles all this logic.
+Well not really we need to convert our potential email address that has type `Text` to `ByteString` and we want to return `Text` in our function not `String` and we don't want to return an `EmailAddress` we want to return Text. Sooo what do we do. Lets write a wrapper around the function that handles all this logic.
 
 first lets make sure we have the correct packages
 
@@ -246,6 +248,8 @@ validateEmail candidate =
 Lets explain this a little. We pass our potential password in but it's of type text so we convert that to a ByteString with `encodeUtf8`. Then we get a `Either String EmailAddress` from the isEmail value. If we get a `Left String` we use `pack :: String -> Text` to return a Text value and if we get an `EmailAddress` we convert it to text by using `decodeUtf8 :: ByteString -> Text` and `toByteString :: EmailAddress -> ByteString`. 
 
 and now we can construct our UserSignup smart constructor.
+
+**Note:** *This doesn't necessarily comply with best practices for smart constructors. Normally you would put these functions in another module and export only `mkUserSignup` and `UserSignup` with our it's constructors that way you must pass the validation to create the desired value.*
 
 *src/Lib.hs*
 ```haskell

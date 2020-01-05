@@ -1,4 +1,4 @@
-title: Hello, My Name is Ethan Gardner
+title: Ethan Gardners Software Blog 
 description: > # this means to ignore newlines until "baseurl:"
   I am some sort of engineer
 permalink: ':title/'
@@ -8,11 +8,11 @@ site-twitter: #if your site has a twitter account, enter it here
 # Author Settings
 author: Ethan Gardner # add your name
 author-img: ethan-hammock.jpg # add your photo
-about-author: I am an engineer that is constantly trying to learn new skills. # add description
+about-author: I am some sort of engineer. # add description
 social-twitter: # add your Twitter handle
 social-facebook: # add your Facebook handle
 social-github: https://github.com/emg184 # add your Github handle
-social-linkedin: www.codingwonders.com # add your Linkedin handle
+social-linkedin: https://www.linkedin.com/in/ethan-gardner-06261988/ # add your Linkedin handle
 social-email: # add your Email address
 
 # Disqus
